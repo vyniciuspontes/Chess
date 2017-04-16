@@ -26,7 +26,8 @@ public class GameScreen extends Screen {
     public GameScreen(Game game) {
         super(game);
         board = new Board(new Vector2(0,0), 800, 600, ResourceManager.BACKGROUND);
-        
+        player1 = new Player();
+        player2 = new Player();
         game.addMouseListener(board);
     }
     
