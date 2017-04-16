@@ -6,6 +6,7 @@
 package com.uff.chess.screens;
 
 import com.uff.chess.gameobjects.Board;
+import com.uff.chess.gameobjects.Player;
 import com.uff.chess.utils.ResourceManager;
 import com.vpontes.gameframework.core.Game;
 import com.vpontes.gameframework.core.Screen;
@@ -19,10 +20,13 @@ import java.awt.Graphics;
 public class GameScreen extends Screen {
 
     private final Board board;
+    private final Player player1;
+    private final Player player2;
     
     public GameScreen(Game game) {
         super(game);
         board = new Board(new Vector2(0,0), 800, 600, ResourceManager.BACKGROUND);
+        
         game.addMouseListener(board);
     }
     
