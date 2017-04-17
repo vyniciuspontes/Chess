@@ -18,6 +18,10 @@ public class Board extends GameObject implements MouseListener {
         ResourceManager.WHITE_SPOT,
         ResourceManager.BLACK_SPOT
     };
+
+    public Spot[][] getSpots() {
+        return spots;
+    }
     
     public Board(Vector2 position, int widght, int height, String imagePath) {
         super(position, widght, height, imagePath);

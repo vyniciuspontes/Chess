@@ -10,6 +10,7 @@ public abstract class GameObject {
     private boolean disabled;
     protected Image image;
     private Vector2 position;
+    private Vector2 center;
     private int widght;
     private int height;
 
@@ -23,6 +24,10 @@ public abstract class GameObject {
 
     public void setPosition(Vector2 position) {
         this.position = position;
+    }
+
+    public Vector2 getCenter(int objectWidght, int objectHeight) {
+        return new Vector2(this.position.getX() + this.widght/2 - (objectWidght/2), this.position.getY() + this.height/2 - (objectHeight/2));
     }
 
     public int getWidght() {
@@ -44,7 +49,7 @@ public abstract class GameObject {
     public void setDisabled(boolean disabled) {
         this.disabled = disabled;
     }
-
+    
     public GameObject(Vector2 position, int widght, int height, String imagePath) {
         this.position = position;
         this.widght = widght;

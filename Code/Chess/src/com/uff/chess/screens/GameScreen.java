@@ -21,13 +21,11 @@ public class GameScreen extends Screen {
 
     private final Board board;
     private final Player player1;
-    private final Player player2;
     
     public GameScreen(Game game) {
         super(game);
         board = new Board(new Vector2(0,0), 800, 600, ResourceManager.BACKGROUND);
-        player1 = new Player();
-        player2 = new Player();
+        player1 = new Player(Player.PlayerColor.WHITE, board);
         game.addMouseListener(board);
     }
     
@@ -38,5 +36,8 @@ public class GameScreen extends Screen {
     @Override
     public void draw(Graphics graphics) {
         board.draw(graphics);
+        player1.getPieces().forEach((piece) -> {
+            piece.draw(graphics);
+        });
     }
 }
