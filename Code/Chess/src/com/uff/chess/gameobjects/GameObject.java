@@ -27,7 +27,7 @@ public abstract class GameObject {
     }
 
     public Vector2 getCenter(int objectWidght, int objectHeight) {
-        return new Vector2(this.position.getX() + this.widght/2 - (objectWidght/2), this.position.getY() + this.height/2 - (objectHeight/2));
+        return new Vector2(this.position.getX() + this.widght / 2 - (objectWidght / 2), this.position.getY() + this.height / 2 - (objectHeight / 2));
     }
 
     public int getWidght() {
@@ -49,15 +49,15 @@ public abstract class GameObject {
     public void setDisabled(boolean disabled) {
         this.disabled = disabled;
     }
-    
+
     public GameObject(Vector2 position, int widght, int height, String imagePath) {
         this.position = position;
         this.widght = widght;
         this.height = height;
-        
+
         this.image = ResourceManager.loadImage(imagePath);
     }
-    
+
     public GameObject(Vector2 position, int widght, int height, String imagePath, boolean disabled) {
         this.position = position;
         this.widght = widght;
@@ -65,7 +65,7 @@ public abstract class GameObject {
         this.disabled = disabled;
         this.image = ResourceManager.loadImage(imagePath);
     }
-    
+
     public void draw(Graphics g) {
         if (!disabled) {
             g.drawImage(this.image, (int) position.getX(), (int) position.getY(), this.widght, this.height, null);

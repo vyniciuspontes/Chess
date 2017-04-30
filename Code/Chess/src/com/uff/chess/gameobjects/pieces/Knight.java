@@ -14,8 +14,8 @@ import com.vpontes.gameframework.math.Vector2;
  */
 public class Knight extends Piece {
 
-    public Knight(Vector2 position, int widght, int height, String imagePath) {
-        super(position, widght, height, imagePath);
+    public Knight(Vector2 position, int widght, int height, PieceColor color, String imagePath) {
+        super(position, widght, height, color, imagePath);
     }
 
     @Override

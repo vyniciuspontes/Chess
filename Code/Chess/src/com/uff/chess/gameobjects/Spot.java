@@ -37,6 +37,10 @@ public class Spot extends GameObject implements Dynamic{
         piece.setPosition(this.getCenter(piece.getWidght(), piece.getHeight()));
         this.currentPiece = piece;
     }
+    
+    public void releaseSpot(){
+        this.currentPiece = null;
+    }
 
     public void mouseClicked(){
         if(this.currentPiece != null)

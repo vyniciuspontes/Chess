@@ -22,13 +22,15 @@ public class Pawn extends Piece {
         return null;
     }
 
-    public Pawn(Vector2 position, int widght, int height, String imagePath) {
-        super(position, widght, height, imagePath);
+    public Pawn(Vector2 position, int widght, int height, PieceColor color, String imagePath) {
+        super(position, widght, height,color, imagePath);
     }
     
     @Override
     public int[][] getMovement() {
-        return null;
+        return new int[][]{
+            {0, 1}
+        };
     }
 
 }

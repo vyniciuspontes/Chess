@@ -15,13 +15,16 @@ import java.util.logging.Logger;
  *
  * @author Thiago & Vynicius Pontes
  */
-public abstract class Piece extends GameObject implements Cloneable{
+public abstract class Piece extends GameObject implements Cloneable {
 
     private boolean isContinuous;
     private boolean isActive;
+    private final PieceColor pieceColor;
     
-    public Piece(Vector2 position, int widght, int height, String imagePath) {
+    public Piece(Vector2 position, int widght, int height, PieceColor color, String imagePath) {
         super(position, widght, height, imagePath);
+        
+        this.pieceColor = color;
     }
 
     public abstract int[][] getMovement();
@@ -41,11 +44,15 @@ public abstract class Piece extends GameObject implements Cloneable{
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
-    
+
+    public PieceColor getPieceColor() {
+        return pieceColor;
+    }
+
     @Override
     public Piece clone() {
         try {
-            return (Piece)super.clone();
+            return (Piece) super.clone();
         } catch (CloneNotSupportedException ex) {
             Logger.getLogger(Piece.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -56,7 +63,9 @@ public abstract class Piece extends GameObject implements Cloneable{
     public String toString() {
         return getClass().toString();
     }
-    
-    
-    
+
+    public enum PieceColor {
+        WHITE, BLACK
+    }
+
 }
