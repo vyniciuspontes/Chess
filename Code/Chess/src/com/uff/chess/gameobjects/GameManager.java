@@ -14,8 +14,8 @@ import com.uff.chess.gameobjects.pieces.Piece.PieceColor;
  */
 public class GameManager implements Dynamic{
 
-    private Board board;
-    private PieceColor actualTurn;
+    private final Board board;
+    private final PieceColor actualTurn;
 
     public PieceColor getActualTurn() {
         return actualTurn;

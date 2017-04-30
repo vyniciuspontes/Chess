@@ -7,10 +7,10 @@
 package com.uff.chess.gameobjects;
 
 import com.uff.chess.gameobjects.pieces.Piece;
-import com.vpontes.gameframework.math.OverlapTester;
 import com.vpontes.gameframework.math.Vector2;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.List;
 
 /**
  *
@@ -23,18 +23,18 @@ public class PlayerManager implements MouseListener {
     private final Player player2;
     private final Piece.PieceColor actualTurnColor;
     private Spot selectedSpot;
+    List<Spot> possiblePaths;
 
     public PlayerManager(Board board, Player player1, Player player2) {
         this.board = board;
         this.player1 = player1;
         this.player2 = player2;
-        this.actualTurnColor = Piece.PieceColor.BLACK;
+        this.actualTurnColor = Piece.PieceColor.WHITE;
     }
 
     public void playerMove(Vector2 clickPosition) {
 
         Spot currentSpot = board.getSpotByMouseClick(clickPosition);
-
         //o spot retornado e nulo ?
         if (currentSpot != null) {
             
@@ -42,14 +42,15 @@ public class PlayerManager implements MouseListener {
                 if(currentSpot.getCurrentPiece().getPieceColor() != actualTurnColor)
                     return;
                 selectedSpot = currentSpot;
-                board.showPossiblePaths(currentSpot);
+                selectedSpot.mouseClicked();
+                possiblePaths = board.showPossiblePaths(currentSpot);
             } else {
-                if (selectedSpot != null && !currentSpot.isOcuppied()) {
+                if (selectedSpot != null && possiblePaths != null && possiblePaths.contains(currentSpot)) {
                     currentSpot.ocuppySpot(selectedSpot.getCurrentPiece());
                     selectedSpot.releaseSpot();
                 }
+                board.turnOffPath();
                 selectedSpot = null;
-
             }
         }
     }

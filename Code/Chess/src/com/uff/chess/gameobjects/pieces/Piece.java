@@ -8,6 +8,7 @@ package com.uff.chess.gameobjects.pieces;
 
 import com.uff.chess.gameobjects.GameObject;
 import com.vpontes.gameframework.math.Vector2;
+import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,26 +18,18 @@ import java.util.logging.Logger;
  */
 public abstract class Piece extends GameObject implements Cloneable {
 
-    private boolean isContinuous;
     private boolean isActive;
     private final PieceColor pieceColor;
     
-    public Piece(Vector2 position, int widght, int height, PieceColor color, String imagePath) {
-        super(position, widght, height, imagePath);
+    public Piece(Vector2 position, int widght, int height, PieceColor color, BufferedImage image) {
+        super(position, widght, height, image);
         
         this.pieceColor = color;
     }
 
     public abstract int[][] getMovement();
-
-    public boolean isIsContinuous() {
-        return isContinuous;
-    }
-
-    public void setIsContinuous(boolean isContinuous) {
-        this.isContinuous = isContinuous;
-    }
-
+    public abstract boolean isContinuous();
+    
     public boolean isIsActive() {
         return isActive;
     }

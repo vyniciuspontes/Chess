@@ -7,9 +7,7 @@
 package com.uff.chess.gameobjects.pieces;
 
 import com.vpontes.gameframework.math.Vector2;
-import java.awt.Image;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -22,8 +20,8 @@ public class Pawn extends Piece {
         return null;
     }
 
-    public Pawn(Vector2 position, int widght, int height, PieceColor color, String imagePath) {
-        super(position, widght, height,color, imagePath);
+    public Pawn(Vector2 position, int widght, int height, PieceColor color, BufferedImage image) {
+        super(position, widght, height, color, image);
     }
     
     @Override
@@ -31,6 +29,11 @@ public class Pawn extends Piece {
         return new int[][]{
             {0, 1}
         };
+    }
+
+    @Override
+    public boolean isContinuous() {
+        return false;
     }
 
 }

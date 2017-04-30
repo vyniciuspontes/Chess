@@ -12,8 +12,8 @@ import com.uff.chess.utils.ResourceManager;
 import com.vpontes.gameframework.math.OverlapTester;
 import com.vpontes.gameframework.math.Vector2;
 import java.awt.Graphics;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,17 +26,18 @@ public class Board extends GameObject {
 
     private final Spot[][] spots = new Spot[8][8];
     private List<Piece> pieces;
-    private final String[] blocksImages = {
+    private final BufferedImage[] blocksImages = {
         ResourceManager.WHITE_SPOT,
         ResourceManager.BLACK_SPOT
     };
 
-    private Spot selectedSpot;
+    private List<Spot> selectedSpots;
 
-    public Board(Vector2 position, int widght, int height, String imagePath) {
-        super(position, widght, height, imagePath);
+    public Board(Vector2 position, int widght, int height, BufferedImage image) {
+        super(position, widght, height, image);
         setupSpots();
         createPieces();
+        selectedSpots = new ArrayList<>();
     }
 
     /**
@@ -78,8 +79,7 @@ public class Board extends GameObject {
         this.spots[7][7].ocuppySpot(whiteRightRook);
         pieces.add(whiteRightRook);
 
-        Piece whiteCurrentPawn = new Pawn(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_PAWN);
-        Piece blackCurrentPawn = new Pawn(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_PAWN);
+        /*Piece blackCurrentPawn = new Pawn(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_PAWN);
         for (int i = 0; i < 8; i++) {
             Piece whiteClonePawn = whiteCurrentPawn.clone();
             this.spots[i][6].ocuppySpot(whiteClonePawn);
@@ -119,7 +119,7 @@ public class Board extends GameObject {
 
         Piece blackRightRook = blackLeftRook.clone();
         this.spots[7][0].ocuppySpot(blackRightRook);
-        pieces.add(blackRightRook);
+        pieces.add(blackRightRook);*/
     }
 
     /**
@@ -132,7 +132,7 @@ public class Board extends GameObject {
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
                 Spot newSpot = new Spot(new Vector2((x * 60) + startPosition.getX(), (y * 60) + startPosition.getY()), 60, 60,
-                        blocksImages[(x + aux) % 2], letters[y] + "" + (x + 1));
+                        blocksImages[(x + aux) % 2], new Point(x, y), letters[y] + "" + (x + 1));
                 spots[x][y] = newSpot;
             }
             if (aux == 1) {
@@ -143,12 +143,13 @@ public class Board extends GameObject {
         }
     }
 
-    public Spot getSpotByPosition(int x, int y) {
-        if (x > 8 || y > 8) {
+    //todo colocar Point
+    public Spot getSpotByPosition(Point p) {
+        if (checkOutofBounds(p)) {
             return null;
         }
 
-        return spots[x][y];
+        return spots[p.x][p.y];
     }
 
     public Spot getSpotByMouseClick(Vector2 clickPosition) {
@@ -163,12 +164,62 @@ public class Board extends GameObject {
 
         return null;
     }
-    
-    public void showPossiblePaths(Spot spot){
-        for (int[] line : spot.getCurrentPiece().getMovement()) {
-            System.out.print(Arrays.toString(line) + ", ");
+
+    public void addContinuosPath(Point startCoordinate, Point move) {
+        startCoordinate.setLocation(startCoordinate.x + move.x, startCoordinate.y + move.y);
+        Spot s = getSpotByPosition(startCoordinate);
+        if (!checkOutofBounds(startCoordinate) && !s.isOcuppied()) {
+            selectedSpots.add(s);
+            s.setSelected(true);
+            addContinuosPath(startCoordinate, move);
         }
-        System.out.println();
+
+    }
+
+    public List<Spot> showPossiblePaths(Spot spot) {
+
+        int direction = spot.getCurrentPiece().getPieceColor() == PieceColor.WHITE ? -1 : 1;
+
+        Point moveCoordinate = new Point();
+        if (spot.getCurrentPiece().isContinuous()) {
+            for (int[] move : spot.getCurrentPiece().getMovement()) {
+                moveCoordinate.x = move[0];
+                moveCoordinate.y = move[1] * direction;
+                addContinuosPath(new Point(spot.getBoardCoordinate()),
+                        moveCoordinate);
+            }
+        } else {
+
+            for (int[] move : spot.getCurrentPiece().getMovement()) {
+                moveCoordinate.x = move[0];
+                moveCoordinate.y = move[1] * direction;
+                if (!checkOutofBounds(spot.getBoardCoordinate(), moveCoordinate)) {
+                    Spot movementSpot = getSpotByPosition(new Point(spot.getBoardCoordinate().x + moveCoordinate.x, spot.getBoardCoordinate().y + moveCoordinate.y));
+                    if (!movementSpot.isOcuppied()) {
+                        movementSpot.setSelected(true);
+                        selectedSpots.add(movementSpot);
+                    }
+                }
+            }
+        }
+
+        return selectedSpots;
+    }
+
+    public void turnOffPath() {
+        selectedSpots.forEach((selectedSpot) -> {
+            selectedSpot.setSelected(false);
+        });
+
+        selectedSpots.clear();
+    }
+
+    private boolean checkOutofBounds(Point current) {
+        return checkOutofBounds(current, new Point(0, 0));
+    }
+
+    private boolean checkOutofBounds(Point current, Point move) {
+        return !(current.x + move.x < 8 && current.x + move.x >= 0 && current.y + move.y >= 0 && current.y + move.y < 8);
     }
 
     @Override
