@@ -79,7 +79,9 @@ public class Board extends GameObject {
         this.spots[7][7].ocuppySpot(whiteRightRook);
         pieces.add(whiteRightRook);
 
-        /*Piece blackCurrentPawn = new Pawn(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_PAWN);
+        Piece whiteCurrentPawn = new Pawn(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_PAWN);
+        
+        Piece blackCurrentPawn = new Pawn(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_PAWN);
         for (int i = 0; i < 8; i++) {
             Piece whiteClonePawn = whiteCurrentPawn.clone();
             this.spots[i][6].ocuppySpot(whiteClonePawn);
@@ -119,7 +121,7 @@ public class Board extends GameObject {
 
         Piece blackRightRook = blackLeftRook.clone();
         this.spots[7][0].ocuppySpot(blackRightRook);
-        pieces.add(blackRightRook);*/
+        pieces.add(blackRightRook);
     }
 
     /**

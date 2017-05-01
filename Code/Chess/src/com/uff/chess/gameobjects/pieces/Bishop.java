@@ -22,7 +22,7 @@ public class Bishop extends Piece {
     @Override
     public int[][] getMovement() {
         return new int[][]{
-            {1, 1}, {-1,1}, {-1,1}, {-1, -1}
+            {1, 1}, {-1,1}, {1,-1}, {-1, -1}
         };
     }
 
