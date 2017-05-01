@@ -23,7 +23,7 @@ public class PlayerManager implements MouseListener {
     private final Player player2;
     private final Piece.PieceColor actualTurnColor;
     private Spot selectedSpot;
-    List<Spot> possiblePaths;
+    private List<Spot> possiblePaths;
 
     public PlayerManager(Board board, Player player1, Player player2) {
         this.board = board;
