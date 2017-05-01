@@ -7,6 +7,7 @@
 package com.uff.chess.gameobjects.pieces;
 
 import com.vpontes.gameframework.math.Vector2;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -14,14 +15,21 @@ import com.vpontes.gameframework.math.Vector2;
  */
 public class Queen extends Piece {
 
-    public Queen(Vector2 position, int widght, int height, String imagePath) {
-        super(position, widght, height, imagePath);
+    public Queen(Vector2 position, int widght, int height, PieceColor color, BufferedImage image) {
+        super(position, widght, height, color, image);
     }
 
 
     @Override
     public int[][] getMovement() {
-        return null;
+        return new int[][]{
+            {1, 0}, {1,1}, {1,-1}, {-1, 0}, {-1, 1}, {-1, -1}, {0, -1}, {0, 1}
+        };
+    }
+
+    @Override
+    public boolean isContinuous() {
+        return true;
     }
     
 }
