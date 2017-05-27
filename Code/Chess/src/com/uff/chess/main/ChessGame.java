@@ -28,7 +28,7 @@ public class ChessGame extends Game {
     @Override
     protected Screen getFirstScreen() {
         ResourceManager.loadImages();
-        return new GameScreen(this);
-        //return new Menu(this);
+        //return new GameScreen(this);
+        return new Menu(this);
     }
 }

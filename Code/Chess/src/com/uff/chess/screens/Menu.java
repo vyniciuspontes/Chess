@@ -28,7 +28,7 @@ public class Menu extends Screen
     {
         super(game);
         background = new Background(new Vector2(0, 0), 800, 600, ResourceManager.MENUBACKGROUND);
-        menuSelector = new MenuSelector(new Vector2(200, 167), 70, 70, ResourceManager.MENUPAWN);
+        menuSelector = new MenuSelector(new Vector2(200, 167), 70, 70, ResourceManager.MENUPAWN, game);
         game.addKeyListener(menuSelector);
         
     }
