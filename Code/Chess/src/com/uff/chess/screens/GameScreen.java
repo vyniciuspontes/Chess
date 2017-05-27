@@ -7,7 +7,7 @@ package com.uff.chess.screens;
 
 import com.uff.chess.gameobjects.Board;
 import com.uff.chess.gameobjects.Player;
-import com.uff.chess.gameobjects.PlayerManager;
+import com.uff.chess.gameobjects.GameManager;
 import com.uff.chess.gameobjects.pieces.Piece;
 import com.uff.chess.utils.ResourceManager;
 import com.vpontes.gameframework.core.Game;
@@ -30,7 +30,7 @@ public class GameScreen extends Screen {
         board = new Board(new Vector2(0, 0), 800, 600, ResourceManager.BACKGROUND);
         player1 = new Player(Piece.PieceColor.WHITE, board);
         player2 = new Player(Piece.PieceColor.BLACK, board);
-        PlayerManager pm = new PlayerManager(board, player1, player2);
+        GameManager pm = new GameManager(board, player1, player2);
         game.addMouseListener(pm);
     }
 

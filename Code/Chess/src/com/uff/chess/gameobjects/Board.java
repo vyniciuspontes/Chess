@@ -144,7 +144,6 @@ public class Board extends GameObject {
         }
     }
 
-    //todo colocar Point
     public Spot getSpotByPosition(Point p) {
         if (checkOutofBounds(p)) {
             return null;

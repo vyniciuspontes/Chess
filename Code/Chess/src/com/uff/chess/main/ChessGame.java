@@ -14,7 +14,7 @@ import com.vpontes.gameframework.core.Screen;
  *
  * @author Vynicius Pontes
  */
-public class ChessGame extends Game{
+public class ChessGame extends Game {
 
     public static void main(String[] args) {
         new ChessGame(800, 600, "Chess").run();
@@ -26,7 +26,7 @@ public class ChessGame extends Game{
 
     @Override
     protected Screen getFirstScreen() {
-       ResourceManager.loadImages();
-       return new GameScreen(this);
+        ResourceManager.loadImages();
+        return new GameScreen(this);
     }
 }
