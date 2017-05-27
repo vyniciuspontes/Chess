@@ -55,7 +55,7 @@ public abstract class Piece extends GameObject implements Cloneable {
 
     @Override
     public String toString() {
-        return getClass().toString();
+        return this.pieceColor + " " + getClass().getSimpleName();
     }
 
     public enum PieceColor {

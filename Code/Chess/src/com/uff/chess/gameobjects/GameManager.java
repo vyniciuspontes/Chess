@@ -55,10 +55,10 @@ public class GameManager implements MouseListener {
                     if(currentSpot.isOcuppied()){
                        board.removePiece(currentSpot);
                     }
-                    currentSpot.ocuppySpot(selectedSpot.getCurrentPiece());
-                    if(selectedSpot.getCurrentPiece() instanceof Pawn && ((Pawn) selectedSpot.getCurrentPiece()).isFirstMovement())
-                        ((Pawn) selectedSpot.getCurrentPiece()).setFirstMovement();
-                    selectedSpot.releaseSpot();
+                    System.out.println("MOVED " + selectedSpot.getCurrentPiece().toString().toUpperCase() + " FROM " + 
+                            currentSpot.toString() + " TO " + selectedSpot.toString());
+                    board.movePiece(currentSpot, selectedSpot, selectedSpot.getCurrentPiece());
+                    board.kingInCheck(actualTurnColor);
                     changeTurn();
                 }
                 board.turnOffPath();

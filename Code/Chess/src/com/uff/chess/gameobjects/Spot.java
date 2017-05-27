@@ -74,11 +74,18 @@ public class Spot extends GameObject implements Dynamic {
 
     public void mouseClicked() {
         if (this.currentPiece != null) {
-            System.out.println(this.code + ": " + this.currentPiece.toString() + " : " + boardCoordinate.toString());
+            System.out.println("SELECTED " + this.currentPiece.getPieceColor() + " " + this.currentPiece.toString().toUpperCase() + " - " + this.code);
         } else {
             System.out.println(this.code + ": Empty");
         }
     }
+
+    @Override
+    public String toString() {
+        return this.code;
+    }
+    
+    
     
     @Override
     public void draw(Graphics g){
