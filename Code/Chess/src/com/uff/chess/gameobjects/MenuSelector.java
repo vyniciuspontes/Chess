@@ -8,6 +8,7 @@ package com.uff.chess.gameobjects;
 
 import com.uff.chess.main.ChessGame;
 import com.uff.chess.screens.GameScreen;
+import com.uff.chess.screens.Menu;
 import com.vpontes.gameframework.core.Game;
 import com.vpontes.gameframework.math.Vector2;
 import java.awt.Graphics;
@@ -25,10 +26,13 @@ public class MenuSelector extends GameObject implements KeyListener
     private int position = 0;
     private Game game;
     
+    private boolean inGame = false;
+    
     
     public MenuSelector(Vector2 position, int widght, int height, BufferedImage image, Game game) {
         super(position, widght, height, image);
         this.game = game;
+        inGame = false;
     }
     
      public void NextPosition()
@@ -78,6 +82,7 @@ public class MenuSelector extends GameObject implements KeyListener
         switch(position)
         {
             case 0:
+                inGame = true;
                 game.setScreen(new GameScreen(game));
                 break;
                 
@@ -118,7 +123,14 @@ public class MenuSelector extends GameObject implements KeyListener
         }
         else if(ke.getKeyCode() == KeyEvent.VK_ESCAPE)
         {
-            System.exit(0);
+            if(inGame == false)
+            {
+                System.exit(0);
+            }
+            else
+            {
+                game.setScreen(new Menu(game));
+            }
         }
     }
 
