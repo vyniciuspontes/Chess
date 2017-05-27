@@ -17,6 +17,9 @@ import javax.imageio.ImageIO;
  */
 public class ResourceManager {
 
+    public static BufferedImage MENUBACKGROUND;
+    public static BufferedImage MENUPAWN;
+    
     public static BufferedImage BACKGROUND;
     public static BufferedImage BLACK_SPOT;
     public static BufferedImage WHITE_SPOT;
@@ -38,7 +41,10 @@ public class ResourceManager {
 
     public static void loadImages() {
         try {
-
+            
+            MENUBACKGROUND = ImageIO.read(new File(".//images//Menu.png"));
+            MENUPAWN = ImageIO.read(new File(".//images//menuPawn.png"));
+            
             BACKGROUND = ImageIO.read(new File(".//images//background.png"));
             BLACK_SPOT = ImageIO.read(new File(".//images//black_spot.png"));
             WHITE_SPOT = ImageIO.read(new File(".//images//white_spot.png"));

@@ -6,6 +6,7 @@
 package com.uff.chess.main;
 
 import com.uff.chess.screens.GameScreen;
+import com.uff.chess.screens.Menu;
 import com.uff.chess.utils.ResourceManager;
 import com.vpontes.gameframework.core.Game;
 import com.vpontes.gameframework.core.Screen;
@@ -28,5 +29,6 @@ public class ChessGame extends Game {
     protected Screen getFirstScreen() {
         ResourceManager.loadImages();
         return new GameScreen(this);
+        //return new Menu(this);
     }
 }
