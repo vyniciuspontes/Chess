@@ -15,20 +15,31 @@ import java.awt.image.BufferedImage;
  */
 public class Pawn extends Piece {
 
-    public static int[][] checkAttackMovement() {
-
-        return null;
-    }
+    private boolean firstMovement;
+    private int[][] movements;
+    private final int[][] attackMovements = new int[][]{{1, 1}, {-1, 1}};
 
     public Pawn(Vector2 position, int widght, int height, PieceColor color, BufferedImage image) {
         super(position, widght, height, color, image);
+        this.firstMovement = true;
+        this.movements = new int[][]{{0, 2}, {0, 1}, {1, 1}, {-1, 1}};
     }
-    
+
+    public boolean isFirstMovement() {
+        return firstMovement;
+    }
+
+    public void setFirstMovement() {
+        this.movements = new int[][]{ {0, 1}, {1, 1}, {-1, 1} };
+    }
+
     @Override
-    public int[][] getMovement() {
-        return new int[][]{
-            {0, 1}
-        };
+    public int[][] getMovements() {
+        return movements;
+    }
+
+    public int[][] getAttackMovements() {
+        return attackMovements;
     }
 
     @Override

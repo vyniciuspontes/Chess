@@ -20,7 +20,7 @@ public class Knight extends Piece {
     }
 
     @Override
-    public int[][] getMovement() {
+    public int[][] getMovements() {
         return new int[][]{
             {1, 2}, {-1, 2}, {1, -2}, {-1, -2}, {2, -1}, {2, 1}, {-2, 1}, {-2, -1}
         };
