@@ -16,7 +16,9 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -25,6 +27,8 @@ import java.util.List;
 public class Board extends GameObject {
 
     private final Spot[][] spots = new Spot[8][8];
+    private Spot whiteKingSpot;
+    private Spot blackKingSpot;
     private List<Piece> pieces;
     private final BufferedImage[] blocksImages = {
         ResourceManager.WHITE_SPOT,
@@ -49,6 +53,7 @@ public class Board extends GameObject {
 
         Piece whiteKingPiece = new King(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_KING);
         this.spots[4][7].ocuppySpot(whiteKingPiece);
+        whiteKingSpot = this.spots[4][7];
         pieces.add(whiteKingPiece);
 
         Piece whiteQueenPiece = new Queen(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_QUEEN);
@@ -93,6 +98,7 @@ public class Board extends GameObject {
 
         Piece blackKingPiece = new King(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_KING);
         this.spots[4][0].ocuppySpot(blackKingPiece);
+        this.blackKingSpot = this.spots[4][0];
         pieces.add(blackKingPiece);
 
         Piece blackQueenPiece = new Queen(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_QUEEN);
@@ -145,6 +151,23 @@ public class Board extends GameObject {
         }
     }
 
+    public void movePiece(Spot toSpot, Spot fromSpot, Piece piece) {
+
+        toSpot.ocuppySpot(piece);
+        fromSpot.releaseSpot();
+
+        if (toSpot.getCurrentPiece() instanceof Pawn && ((Pawn) toSpot.getCurrentPiece()).isFirstMovement()) {
+            ((Pawn) toSpot.getCurrentPiece()).setFirstMovement();
+        } else if (toSpot.getCurrentPiece() instanceof King) {
+            if (toSpot.getCurrentPiece().getPieceColor() == PieceColor.BLACK) {
+                this.blackKingSpot = toSpot;
+            } else if (toSpot.getCurrentPiece().getPieceColor() == PieceColor.WHITE) {
+                this.whiteKingSpot = toSpot;
+            }
+        }
+
+    }
+
     public Spot getSpotByPosition(Point p) {
         if (checkOutofBounds(p)) {
             return null;
@@ -164,6 +187,46 @@ public class Board extends GameObject {
         }
 
         return null;
+    }
+
+    public Set<Spot> getSpotByPieceColor(PieceColor pieceColor) {
+
+        Set<Spot> spotByColor = new HashSet<>();
+
+        for (Spot[] spot : spots) {
+            for (Spot spot1 : spot) {
+                if (spot1.isOcuppied() && spot1.getCurrentPiece().getPieceColor() == pieceColor) {
+                    spotByColor.add(spot1);
+                }
+            }
+        }
+
+        return spotByColor;
+    }
+
+    public boolean kingInCheck(PieceColor pieceColor) {
+
+        Set<Spot> enemyPossibleMoves = new HashSet<>();
+
+        Set<Spot> enemyOccupiedSpots = getSpotByPieceColor(pieceColor);
+
+        enemyOccupiedSpots.forEach((enemyOccupiedSpot) -> {
+            enemyPossibleMoves.addAll(this.showPossiblePaths(enemyOccupiedSpot));
+        });
+
+        if (pieceColor == PieceColor.WHITE) {
+            if (enemyPossibleMoves.contains(this.blackKingSpot)) {
+                System.out.println("Black King in xeque".toUpperCase());
+                return true;
+            }
+        } else if (pieceColor == PieceColor.BLACK) {
+            if (enemyPossibleMoves.contains(this.whiteKingSpot)) {
+                System.out.println("White King in xeque".toUpperCase());
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void removePiece(Spot spot) {
