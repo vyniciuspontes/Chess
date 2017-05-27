@@ -20,7 +20,7 @@ public class King extends Piece {
     }
 
     @Override
-    public int[][] getMovement() {
+    public int[][] getMovements() {
         return new int[][]{
             {1, 0}, {1,1}, {1,-1}, {-1, 0}, {-1, 1}, {-1, -1}, {0, -1}, {0, 1}
         };

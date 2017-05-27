@@ -18,24 +18,25 @@ import java.util.logging.Logger;
  */
 public abstract class Piece extends GameObject implements Cloneable {
 
-    private boolean isActive;
+    private boolean removed;
     private final PieceColor pieceColor;
-    
+
     public Piece(Vector2 position, int widght, int height, PieceColor color, BufferedImage image) {
         super(position, widght, height, image);
-        
+
         this.pieceColor = color;
     }
 
-    public abstract int[][] getMovement();
+    public abstract int[][] getMovements();
+
     public abstract boolean isContinuous();
-    
-    public boolean isIsActive() {
-        return isActive;
+
+    public boolean isRemoved() {
+        return removed;
     }
 
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
     }
 
     public PieceColor getPieceColor() {

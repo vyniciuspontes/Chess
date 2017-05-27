@@ -1,5 +1,6 @@
 package com.uff.chess.gameobjects;
 
+import com.uff.chess.gameobjects.pieces.Pawn;
 import com.uff.chess.gameobjects.pieces.Piece;
 import com.uff.chess.utils.ResourceManager;
 import com.vpontes.gameframework.math.Rectangle;

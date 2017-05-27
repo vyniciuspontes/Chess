@@ -6,7 +6,7 @@
  */
 package com.uff.chess.gameobjects;
 
-import com.uff.chess.gameobjects.pieces.Piece;
+import com.uff.chess.gameobjects.pieces.Pawn;
 import com.uff.chess.gameobjects.pieces.Piece.PieceColor;
 import com.vpontes.gameframework.math.Vector2;
 import java.awt.event.MouseEvent;
@@ -43,13 +43,21 @@ public class GameManager implements MouseListener {
                 if (currentSpot.getCurrentPiece().getPieceColor() != actualTurnColor) {
                     return;
                 }
+                possiblePaths = board.showPossiblePaths(currentSpot);
+                if (possiblePaths.isEmpty()) {
+                    return;
+                }
                 selectedSpot = currentSpot;
                 selectedSpot.mouseClicked();
-                possiblePaths = board.showPossiblePaths(currentSpot);
             } else {
                 if (selectedSpot != null && possiblePaths != null && possiblePaths.contains(currentSpot)) {
                     //player fez sua jogada
+                    if(currentSpot.isOcuppied()){
+                       board.removePiece(currentSpot);
+                    }
                     currentSpot.ocuppySpot(selectedSpot.getCurrentPiece());
+                    if(selectedSpot.getCurrentPiece() instanceof Pawn && ((Pawn) selectedSpot.getCurrentPiece()).isFirstMovement())
+                        ((Pawn) selectedSpot.getCurrentPiece()).setFirstMovement();
                     selectedSpot.releaseSpot();
                     changeTurn();
                 }

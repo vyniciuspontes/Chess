@@ -20,7 +20,7 @@ public class Rook extends Piece {
     }
 
     @Override
-    public int[][] getMovement() {
+    public int[][] getMovements() {
         return new int[][]{
             {1, 0}, {-1, 0}, {0, 1}, {0, -1}
         };

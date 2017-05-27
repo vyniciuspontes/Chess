@@ -15,6 +15,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -79,7 +80,7 @@ public class Board extends GameObject {
         pieces.add(whiteRightRook);
 
         Piece whiteCurrentPawn = new Pawn(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_PAWN);
-        
+
         Piece blackCurrentPawn = new Pawn(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_PAWN);
         for (int i = 0; i < 8; i++) {
             Piece whiteClonePawn = whiteCurrentPawn.clone();
@@ -165,13 +166,23 @@ public class Board extends GameObject {
         return null;
     }
 
-    public void addContinuosPath(Point startCoordinate, Point move) {
+    public void removePiece(Spot spot) {
+        spot.getCurrentPiece().setRemoved(true);
+        spot.releaseSpot();
+    }
+
+    private void addContinuosPath(Point startCoordinate, Point move, Piece piece) {
         startCoordinate.setLocation(startCoordinate.x + move.x, startCoordinate.y + move.y);
         Spot s = getSpotByPosition(startCoordinate);
-        if (!checkOutofBounds(startCoordinate) && !s.isOcuppied()) {
-            selectedSpots.add(s);
-            s.setSelected(true);
-            addContinuosPath(startCoordinate, move);
+        if (!checkOutofBounds(startCoordinate)) {
+            if (!s.isOcuppied()) {
+                selectedSpots.add(s);
+                s.setSelected(true);
+                addContinuosPath(startCoordinate, move, piece);
+            } else if (s.getCurrentPiece().getPieceColor() != piece.getPieceColor()) {
+                selectedSpots.add(s);
+                s.setSelected(true);
+            }
         }
 
     }
@@ -182,20 +193,37 @@ public class Board extends GameObject {
 
         Point moveCoordinate = new Point();
         if (spot.getCurrentPiece().isContinuous()) {
-            for (int[] move : spot.getCurrentPiece().getMovement()) {
+            for (int[] move : spot.getCurrentPiece().getMovements()) {
                 moveCoordinate.x = move[0];
                 moveCoordinate.y = move[1] * direction;
                 addContinuosPath(new Point(spot.getBoardCoordinate()),
-                        moveCoordinate);
+                        moveCoordinate, spot.getCurrentPiece());
             }
         } else {
-
-            for (int[] move : spot.getCurrentPiece().getMovement()) {
+            for (int[] move : spot.getCurrentPiece().getMovements()) {
                 moveCoordinate.x = move[0];
                 moveCoordinate.y = move[1] * direction;
                 if (!checkOutofBounds(spot.getBoardCoordinate(), moveCoordinate)) {
                     Spot movementSpot = getSpotByPosition(new Point(spot.getBoardCoordinate().x + moveCoordinate.x, spot.getBoardCoordinate().y + moveCoordinate.y));
-                    if (!movementSpot.isOcuppied()) {
+                    //peao possui movimentacao diferenciada
+                    if (spot.getCurrentPiece() instanceof Pawn) {
+
+                        boolean isAttackMovement = false;
+                        //checa se o movimento da iteracao e um movimento de ataque do peao
+                        for (int[] movement : ((Pawn) spot.getCurrentPiece()).getAttackMovements()) {
+                            if (Arrays.equals(movement, move)) {
+                                isAttackMovement = true;
+                                break;
+                            }
+                        }
+
+                        if ((isAttackMovement && movementSpot.isOcuppied() && spot.getCurrentPiece().getPieceColor() != movementSpot.getCurrentPiece().getPieceColor())
+                                || (!isAttackMovement && !movementSpot.isOcuppied())) {
+                            movementSpot.setSelected(true);
+                            selectedSpots.add(movementSpot);
+                        }
+                    } else if (!movementSpot.isOcuppied() || spot.getCurrentPiece().getPieceColor() != movementSpot.getCurrentPiece().getPieceColor()) {
+
                         movementSpot.setSelected(true);
                         selectedSpots.add(movementSpot);
                     }
@@ -231,7 +259,9 @@ public class Board extends GameObject {
             }
         }
         pieces.forEach((piece) -> {
-            piece.draw(g);
+            if (!piece.isRemoved()) {
+                piece.draw(g);
+            }
         });
     }
 
