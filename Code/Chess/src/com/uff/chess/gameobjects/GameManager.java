@@ -52,8 +52,8 @@ public class GameManager implements MouseListener {
                 selectedSpot.mouseClicked();
             } else {
                 if (selectedSpot != null && possiblePaths != null
-                        && possiblePaths.contains(currentSpot) 
-                        && !board.kingInCheck(actualTurnColor)) {
+                        && possiblePaths.contains(currentSpot)){
+                        //&& !board.kingInCheck(actualTurnColor)) {
 
                     //if (possiblePaths.contains(currentSpot)) {
 
@@ -84,6 +84,8 @@ public class GameManager implements MouseListener {
             default:
                 throw new AssertionError();
         }
+        
+        board.kingInCheck(actualTurnColor);
     }
 
     @Override
