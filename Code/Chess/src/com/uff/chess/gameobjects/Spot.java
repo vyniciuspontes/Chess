@@ -85,8 +85,6 @@ public class Spot extends GameObject implements Dynamic {
         return this.code;
     }
     
-    
-    
     @Override
     public void draw(Graphics g){
         super.draw(g, currentImage);
