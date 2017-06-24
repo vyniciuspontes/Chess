@@ -54,11 +54,11 @@ public class Board extends GameObject {
         whiteKingSpot = this.spots[4][7];
         pieces.add(whiteKingPiece);
 
-        Piece whiteQueenPiece = new Queen(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_QUEEN);
+         Piece whiteQueenPiece = new Queen(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_QUEEN);
         this.spots[3][7].ocuppySpot(whiteQueenPiece);
         pieces.add(whiteQueenPiece);
 
-        Piece whiteLeftKnight = new Knight(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_KNIGHT);
+        /*Piece whiteLeftKnight = new Knight(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_KNIGHT);
         this.spots[2][7].ocuppySpot(whiteLeftKnight);
         pieces.add(whiteLeftKnight);
 
@@ -80,9 +80,9 @@ public class Board extends GameObject {
 
         Piece whiteRightRook = whiteLeftRook.clone();
         this.spots[7][7].ocuppySpot(whiteRightRook);
-        pieces.add(whiteRightRook);
+        pieces.add(whiteRightRook);*/
 
-        Piece whiteCurrentPawn = new Pawn(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_PAWN);
+        /*Piece whiteCurrentPawn = new Pawn(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_PAWN);
 
         Piece blackCurrentPawn = new Pawn(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_PAWN);
         for (int i = 0; i < 8; i++) {
@@ -92,14 +92,14 @@ public class Board extends GameObject {
             this.spots[i][1].ocuppySpot(blackClonePawn);
             pieces.add(whiteClonePawn);
             pieces.add(blackClonePawn);
-        }
+        }*/
 
         Piece blackKingPiece = new King(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_KING);
         this.spots[4][0].ocuppySpot(blackKingPiece);
         this.blackKingSpot = this.spots[4][0];
         pieces.add(blackKingPiece);
 
-        Piece blackQueenPiece = new Queen(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_QUEEN);
+        /*Piece blackQueenPiece = new Queen(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_QUEEN);
         this.spots[3][0].ocuppySpot(blackQueenPiece);
         pieces.add(blackQueenPiece);
 
@@ -125,7 +125,7 @@ public class Board extends GameObject {
 
         Piece blackRightRook = blackLeftRook.clone();
         this.spots[7][0].ocuppySpot(blackRightRook);
-        pieces.add(blackRightRook);
+        pieces.add(blackRightRook);*/
     }
 
     /**
@@ -163,7 +163,6 @@ public class Board extends GameObject {
                 this.whiteKingSpot = toSpot;
             }
         }
-
     }
 
     public Spot getSpotByPosition(Point p) {
@@ -187,6 +186,11 @@ public class Board extends GameObject {
         return null;
     }
 
+    /**
+     * Retorna um set de spots com peças da cor recebida
+     * @param pieceColor
+     * @return 
+     */
     public Set<Spot> getSpotByPieceColor(PieceColor pieceColor) {
 
         Set<Spot> spotByColor = new HashSet<>();
@@ -226,9 +230,41 @@ public class Board extends GameObject {
             }
         }
         
-        
         //turnPath(false, enemyPossibleMoves);
 
+        return false;
+    }
+    
+    public boolean getWinCondition(PieceColor pieceColor){
+        
+        PieceColor enemyColor = pieceColor == PieceColor.WHITE ? PieceColor.BLACK : PieceColor.WHITE; 
+        
+        Set<Spot> myPossibleMoves = new HashSet<>();
+        Set<Spot> mySpots = getSpotByPieceColor(pieceColor);
+        
+        
+        System.out.println(mySpots);
+        
+        mySpots.forEach((mySpot) -> {
+            myPossibleMoves.addAll(this.showPossiblePaths(mySpot));
+        });
+        
+        //turnPath(true, myPossibleMoves);
+        
+        Set<Spot> enemyPossibleMoves = new HashSet<>();
+        Set<Spot> enemyOccupiedSpots = getSpotByPieceColor(enemyColor);
+
+        enemyOccupiedSpots.forEach((enemyOccupiedSpot) -> {
+            enemyPossibleMoves.addAll(this.showPossiblePaths(enemyOccupiedSpot));
+        });
+        
+        
+        myPossibleMoves.removeAll(enemyPossibleMoves);
+        
+        turnPath(true, myPossibleMoves);
+        
+        System.out.println("My " + pieceColor + " Possible Moves: " + myPossibleMoves.size());
+        
         return false;
     }
 
@@ -320,6 +356,7 @@ public class Board extends GameObject {
                 spotX.draw(g);
             }
         }
+        
         pieces.forEach((piece) -> {
             if (!piece.isRemoved()) {
                 piece.draw(g);
