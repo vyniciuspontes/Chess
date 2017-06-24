@@ -47,21 +47,27 @@ public class GameManager implements MouseListener {
                 if (possiblePaths.isEmpty()) {
                     return;
                 }
+                board.turnPath(true, possiblePaths);
                 selectedSpot = currentSpot;
                 selectedSpot.mouseClicked();
             } else {
-                if (selectedSpot != null && possiblePaths != null && possiblePaths.contains(currentSpot)) {
-                    //player fez sua jogada
-                    if(currentSpot.isOcuppied()){
-                       board.removePiece(currentSpot);
-                    }
-                    System.out.println("MOVED " + selectedSpot.getCurrentPiece().toString().toUpperCase() + " FROM " + 
-                            currentSpot.toString() + " TO " + selectedSpot.toString());
-                    board.movePiece(currentSpot, selectedSpot, selectedSpot.getCurrentPiece());
-                    board.kingInCheck(actualTurnColor);
-                    changeTurn();
+                if (selectedSpot != null && possiblePaths != null
+                        && possiblePaths.contains(currentSpot)){
+                        //&& !board.kingInCheck(actualTurnColor)) {
+
+                    //if (possiblePaths.contains(currentSpot)) {
+
+                        //player fez sua jogada
+                        if (currentSpot.isOcuppied()) {
+                            board.removePiece(currentSpot);
+                        }
+                        System.out.println("MOVED " + selectedSpot.getCurrentPiece().toString().toUpperCase() + " FROM "
+                                + currentSpot.toString() + " TO " + selectedSpot.toString());
+                        board.movePiece(currentSpot, selectedSpot, selectedSpot.getCurrentPiece());
+                        changeTurn();
+                    //}
                 }
-                board.turnOffPath();
+                board.turnPath(false, possiblePaths);
                 selectedSpot = null;
             }
         }
@@ -78,6 +84,8 @@ public class GameManager implements MouseListener {
             default:
                 throw new AssertionError();
         }
+        
+        board.kingInCheck(actualTurnColor);
     }
 
     @Override

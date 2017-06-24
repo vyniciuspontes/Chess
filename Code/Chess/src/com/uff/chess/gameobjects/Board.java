@@ -16,6 +16,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,13 +36,10 @@ public class Board extends GameObject {
         ResourceManager.BLACK_SPOT
     };
 
-    private List<Spot> selectedSpots;
-
     public Board(Vector2 position, int widght, int height, BufferedImage image) {
         super(position, widght, height, image);
         setupSpots();
         createPieces();
-        selectedSpots = new ArrayList<>();
     }
 
     /**
@@ -203,28 +201,33 @@ public class Board extends GameObject {
 
         return spotByColor;
     }
-
+    
     public boolean kingInCheck(PieceColor pieceColor) {
 
         Set<Spot> enemyPossibleMoves = new HashSet<>();
 
-        Set<Spot> enemyOccupiedSpots = getSpotByPieceColor(pieceColor);
+        Set<Spot> enemyOccupiedSpots = getSpotByPieceColor(pieceColor == PieceColor.WHITE ? PieceColor.BLACK : PieceColor.WHITE);
 
         enemyOccupiedSpots.forEach((enemyOccupiedSpot) -> {
             enemyPossibleMoves.addAll(this.showPossiblePaths(enemyOccupiedSpot));
         });
+        
+        //turnPath(true, enemyPossibleMoves);
 
-        if (pieceColor == PieceColor.WHITE) {
+        if (pieceColor == PieceColor.BLACK) {
             if (enemyPossibleMoves.contains(this.blackKingSpot)) {
                 System.out.println("Black King in xeque".toUpperCase());
                 return true;
             }
-        } else if (pieceColor == PieceColor.BLACK) {
+        } else if (pieceColor == PieceColor.WHITE) {
             if (enemyPossibleMoves.contains(this.whiteKingSpot)) {
                 System.out.println("White King in xeque".toUpperCase());
                 return true;
             }
         }
+        
+        
+        //turnPath(false, enemyPossibleMoves);
 
         return false;
     }
@@ -234,17 +237,15 @@ public class Board extends GameObject {
         spot.releaseSpot();
     }
 
-    private void addContinuosPath(Point startCoordinate, Point move, Piece piece) {
+    private void addContinuosPath(Point startCoordinate, Point move, Piece piece, List<Spot> spotList) {
         startCoordinate.setLocation(startCoordinate.x + move.x, startCoordinate.y + move.y);
         Spot s = getSpotByPosition(startCoordinate);
         if (!checkOutofBounds(startCoordinate)) {
             if (!s.isOcuppied()) {
-                selectedSpots.add(s);
-                s.setSelected(true);
-                addContinuosPath(startCoordinate, move, piece);
+                spotList.add(s);
+                addContinuosPath(startCoordinate, move, piece, spotList);
             } else if (s.getCurrentPiece().getPieceColor() != piece.getPieceColor()) {
-                selectedSpots.add(s);
-                s.setSelected(true);
+                spotList.add(s);
             }
         }
 
@@ -252,6 +253,8 @@ public class Board extends GameObject {
 
     public List<Spot> showPossiblePaths(Spot spot) {
 
+        List<Spot> selectedSpots = new ArrayList<>();
+        
         int direction = spot.getCurrentPiece().getPieceColor() == PieceColor.WHITE ? -1 : 1;
 
         Point moveCoordinate = new Point();
@@ -260,7 +263,7 @@ public class Board extends GameObject {
                 moveCoordinate.x = move[0];
                 moveCoordinate.y = move[1] * direction;
                 addContinuosPath(new Point(spot.getBoardCoordinate()),
-                        moveCoordinate, spot.getCurrentPiece());
+                        moveCoordinate, spot.getCurrentPiece(), selectedSpots);
             }
         } else {
             for (int[] move : spot.getCurrentPiece().getMovements()) {
@@ -282,12 +285,10 @@ public class Board extends GameObject {
 
                         if ((isAttackMovement && movementSpot.isOcuppied() && spot.getCurrentPiece().getPieceColor() != movementSpot.getCurrentPiece().getPieceColor())
                                 || (!isAttackMovement && !movementSpot.isOcuppied())) {
-                            movementSpot.setSelected(true);
                             selectedSpots.add(movementSpot);
                         }
                     } else if (!movementSpot.isOcuppied() || spot.getCurrentPiece().getPieceColor() != movementSpot.getCurrentPiece().getPieceColor()) {
 
-                        movementSpot.setSelected(true);
                         selectedSpots.add(movementSpot);
                     }
                 }
@@ -297,12 +298,10 @@ public class Board extends GameObject {
         return selectedSpots;
     }
 
-    public void turnOffPath() {
-        selectedSpots.forEach((selectedSpot) -> {
-            selectedSpot.setSelected(false);
+    public void turnPath(boolean on, Collection<Spot> spotList) {
+        spotList.forEach((selectedSpot) -> {
+            selectedSpot.setSelected(on);
         });
-
-        selectedSpots.clear();
     }
 
     private boolean checkOutofBounds(Point current) {
