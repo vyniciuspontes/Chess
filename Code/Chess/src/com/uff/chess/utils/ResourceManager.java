@@ -19,6 +19,10 @@ public class ResourceManager {
 
     public static BufferedImage MENUBACKGROUND;
     public static BufferedImage MENUPAWN;
+    public static BufferedImage GAMEMODE;
+    public static BufferedImage AREYOUSURE;
+    public static BufferedImage CREDITS;
+    public static BufferedImage DIFFICULTY;
     
     public static BufferedImage BACKGROUND;
     public static BufferedImage BLACK_SPOT;
@@ -44,6 +48,10 @@ public class ResourceManager {
             
             MENUBACKGROUND = ImageIO.read(new File(".//images//Menu.png"));
             MENUPAWN = ImageIO.read(new File(".//images//menuPawn.png"));
+            GAMEMODE = ImageIO.read(new File(".//images//GameMode.png"));
+            AREYOUSURE = ImageIO.read(new File(".//images//AreYouSure.png"));
+            CREDITS = ImageIO.read(new File(".//images//Credits.png"));
+            DIFFICULTY = ImageIO.read(new File(".//images//Difficulty.png"));
             
             BACKGROUND = ImageIO.read(new File(".//images//background.png"));
             BLACK_SPOT = ImageIO.read(new File(".//images//black_spot.png"));
