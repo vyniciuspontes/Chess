@@ -6,9 +6,12 @@
 package com.uff.chess.screens;
 
 import com.uff.chess.gameobjects.Board;
-import com.uff.chess.gameobjects.Player;
 import com.uff.chess.gameobjects.GameManager;
+import com.uff.chess.gameobjects.players.HumamPlayer;
+import com.uff.chess.gameobjects.players.IA;
+import com.uff.chess.gameobjects.players.Player;
 import com.uff.chess.gameobjects.pieces.Piece;
+import com.uff.chess.gameobjects.pieces.Piece.PieceColor;
 import com.uff.chess.utils.ResourceManager;
 import com.vpontes.gameframework.core.Game;
 import com.vpontes.gameframework.core.Screen;
@@ -22,21 +25,18 @@ import java.awt.Graphics;
 public class GameScreen extends Screen {
 
     private final Board board;
-    private final Player player1;
-    private final Player player2;
+    private final GameManager pm; 
 
     public GameScreen(Game game) {
         super(game);
-        board = new Board(new Vector2(0, 0), 800, 600, ResourceManager.BACKGROUND);
-        player1 = new Player(Piece.PieceColor.WHITE, board);
-        player2 = new Player(Piece.PieceColor.BLACK, board);
-        GameManager pm = new GameManager(board, player1, player2);
+        this.board = new Board(new Vector2(0, 0), 800, 600, ResourceManager.BACKGROUND);
+        this.pm = new GameManager(board, Piece.PieceColor.WHITE, Piece.PieceColor.BLACK, false);
         game.addMouseListener(pm);
     }
 
     @Override
     public void update(double deltaTime) {
-        player1.update(deltaTime);
+        pm.update(deltaTime);
     }
 
     @Override

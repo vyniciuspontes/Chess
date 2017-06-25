@@ -6,86 +6,64 @@
  */
 package com.uff.chess.gameobjects;
 
-import com.uff.chess.gameobjects.pieces.Pawn;
+import com.uff.chess.gameobjects.players.HumamPlayer;
+import com.uff.chess.gameobjects.players.IA;
 import com.uff.chess.gameobjects.pieces.Piece.PieceColor;
 import com.vpontes.gameframework.math.Vector2;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.List;
 
 /**
  *
  * @author Vynicius Pontes
  */
-public class GameManager implements MouseListener {
+public class GameManager implements MouseListener, Dynamic {
 
     private final Board board;
-    private final Player player1;
-    private final Player player2;
-    private PieceColor actualTurnColor;
-    private Spot selectedSpot;
-    private List<Spot> possiblePaths;
+    private HumamPlayer player1;
+    private HumamPlayer player2;
+    private IA ia;
+    private PieceColor currentColor;
 
-    public GameManager(Board board, Player player1, Player player2) {
+    private GameManager(Board board) {
         this.board = board;
-        this.player1 = player1;
-        this.player2 = player2;
-        this.actualTurnColor = PieceColor.WHITE;
+        this.currentColor = PieceColor.WHITE;
     }
 
-    public void playerMove(Vector2 clickPosition) {
-
-        Spot currentSpot = board.getSpotByMouseClick(clickPosition);
-
-        if (currentSpot != null) {
-
-            if (selectedSpot == null && currentSpot.isOcuppied()) {
-                if (currentSpot.getCurrentPiece().getPieceColor() != actualTurnColor) {
-                    return;
-                }
-                possiblePaths = board.showPossiblePaths(currentSpot);
-                if (possiblePaths.isEmpty()) {
-                    return;
-                }
-                board.turnPath(true, possiblePaths);
-                selectedSpot = currentSpot;
-                selectedSpot.mouseClicked();
-            } else {
-                if (selectedSpot != null && possiblePaths != null
-                        && possiblePaths.contains(currentSpot)){
-                        //&& !board.kingInCheck(actualTurnColor)) {
-
-                    //if (possiblePaths.contains(currentSpot)) {
-
-                        //player fez sua jogada
-                        if (currentSpot.isOcuppied()) {
-                            board.removePiece(currentSpot);
-                        }
-                        System.out.println("MOVED " + selectedSpot.getCurrentPiece().toString().toUpperCase() + " FROM "
-                                + currentSpot.toString() + " TO " + selectedSpot.toString());
-                        board.movePiece(currentSpot, selectedSpot, selectedSpot.getCurrentPiece());
-                        changeTurn();
-                    //}
-                }
-                board.turnPath(false, possiblePaths);
-                selectedSpot = null;
-            }
+    public GameManager(Board board, PieceColor player1Color, PieceColor player2Color, boolean onlyHumans) {
+        this(board);
+        if(onlyHumans){
+            player1 = new HumamPlayer(this, player1Color, board);
+            player2 = new HumamPlayer(this, player2Color, board);
+        }else{
+            player1 = new HumamPlayer(this, player1Color, board);
+            ia= new IA(this, player2Color, board);
         }
     }
 
-    private void changeTurn() {
-        switch (actualTurnColor) {
+    public void changeTurn() {
+
+        switch (currentColor) {
             case WHITE:
-                this.actualTurnColor = PieceColor.BLACK;
+                currentColor = PieceColor.BLACK;
+                board.getWinCondition(currentColor);
                 break;
             case BLACK:
-                actualTurnColor = PieceColor.WHITE;
+                currentColor = PieceColor.WHITE;
                 break;
             default:
                 throw new AssertionError();
         }
-        
-        board.kingInCheck(actualTurnColor);
+        board.kingInCheck(currentColor);
+
+        if (ia != null && currentColor == ia.getColor()) {
+            this.ia.play();
+        }
+    }
+
+    @Override
+    public void update(double deltaTime) {
+
     }
 
     @Override
@@ -95,13 +73,18 @@ public class GameManager implements MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
 
-        if (e.getButton() != 1) {
+        if (e.getButton() != 1 || (ia != null && currentColor == ia.getColor())) {
             return;
         }
 
         Vector2 clickPosition = new Vector2(e.getPoint().getX(), e.getPoint().getY());
 
-        playerMove(clickPosition);
+        if (player1.getColor() == currentColor) {
+            player1.humamPlayerMove(clickPosition);
+        } else {
+            player2.humamPlayerMove(clickPosition);
+        }
+
     }
 
     @Override
@@ -115,5 +98,4 @@ public class GameManager implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
     }
-
 }

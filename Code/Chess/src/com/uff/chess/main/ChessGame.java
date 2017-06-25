@@ -29,6 +29,6 @@ public class ChessGame extends Game {
     protected Screen getFirstScreen() {
         ResourceManager.loadImages();
         //return new GameScreen(this);
-        return new Menu(this);
+        return new GameScreen(this);
     }
 }
