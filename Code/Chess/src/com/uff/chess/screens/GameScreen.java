@@ -30,7 +30,7 @@ public class GameScreen extends Screen {
     public GameScreen(Game game) {
         super(game);
         this.board = new Board(new Vector2(0, 0), 800, 600, ResourceManager.BACKGROUND);
-        this.pm = new GameManager(board, Piece.PieceColor.WHITE, Piece.PieceColor.BLACK, true);
+        this.pm = new GameManager(board, Piece.PieceColor.WHITE, Piece.PieceColor.BLACK, false);
         game.addMouseListener(pm);
     }
 
