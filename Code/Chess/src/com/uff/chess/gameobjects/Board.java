@@ -237,7 +237,11 @@ public class Board extends GameObject {
     
     public boolean getWinCondition(PieceColor pieceColor){
         
+        //this.turnPath(false, this.spots);
+        
         PieceColor enemyColor = pieceColor == PieceColor.WHITE ? PieceColor.BLACK : PieceColor.WHITE; 
+        
+        King blackKing = (King) this.blackKingSpot.getCurrentPiece();
         
         Set<Spot> myPossibleMoves = new HashSet<>();
         Set<Spot> mySpots = getSpotByPieceColor(pieceColor);
@@ -250,6 +254,8 @@ public class Board extends GameObject {
         });
         
         //turnPath(true, myPossibleMoves);
+        
+        this.blackKingSpot.releaseSpot();
         
         Set<Spot> enemyPossibleMoves = new HashSet<>();
         Set<Spot> enemyOccupiedSpots = getSpotByPieceColor(enemyColor);
@@ -264,6 +270,8 @@ public class Board extends GameObject {
         turnPath(true, myPossibleMoves);
         
         System.out.println("My " + pieceColor + " Possible Moves: " + myPossibleMoves.size());
+        
+        this.blackKingSpot.ocuppySpot(blackKing);
         
         return false;
     }
@@ -338,6 +346,14 @@ public class Board extends GameObject {
         spotList.forEach((selectedSpot) -> {
             selectedSpot.setSelected(on);
         });
+    }
+    
+    public void turnPath(boolean on, Spot[][] spotArray) {
+        for (Spot[] spots1 : spotArray) {
+            for (Spot spot : spots1) {
+                spot.setSelected(on);
+            }
+        }
     }
 
     private boolean checkOutofBounds(Point current) {

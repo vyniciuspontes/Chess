@@ -44,6 +44,8 @@ public class HumamPlayer extends Player {
                 selectedSpot = currentSpot;
                 selectedSpot.mouseClicked();
             } else {
+                
+                board.turnPath(false, possiblePaths);
                 if (selectedSpot != null && possiblePaths != null
                         && possiblePaths.contains(currentSpot)) {
                     //&& !board.kingInCheck(actualTurnColor)) {
@@ -58,7 +60,6 @@ public class HumamPlayer extends Player {
                     board.movePiece(currentSpot, selectedSpot, selectedSpot.getCurrentPiece());
                     manager.changeTurn();
                 }
-                board.turnPath(false, possiblePaths);
                 selectedSpot = null;
             }
         }
