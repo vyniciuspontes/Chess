@@ -254,7 +254,7 @@ public class Board extends GameObject {
         //turnPath(false, enemyPossibleMoves);
         return false;
     }
-    
+
     public boolean kingInCheck(PieceColor pieceColor, Spot kingSpot, boolean considerMyColorPieces) {
 
         Set<Spot> enemyPossibleMoves = new HashSet<>();
@@ -319,26 +319,19 @@ public class Board extends GameObject {
 
         Set<Spot> enemyPossibleMoves = getPossibleMovesByColor(enemyColor, false);
 
-        //myPossibleMoves.removeIf(p-> enemyPossibleMoves.contains(p) && );
         currentKingSpot.ocuppySpot(currentKing);
 
         Set<Spot> kingPossibleMoves = this.getPiecePath(currentKingSpot);
 
         if (kingInCheck(pieceColor, currentKingSpot)) {
-            /*myPossibleMoves.removeIf(p -> ( (p.getCurrentPiece() == null && !kingPossibleMoves.contains(p) && 
-                    testeTest(p, PieceColor.BLACK) && !enemyPossibleMoves.contains(p))) 
-                    || (p.getCurrentPiece() != null && p.getCurrentPiece().getPieceColor() != enemyColor )
-                    //|| !(testeTest(p, PieceColor.BLACK)) 
-                    || (p.getCurrentPiece() != null && !this.getPiecePath(p).contains(currentKingSpot)));*/
 
             myPossibleMoves.removeIf(p
-                    -> 
-                    (p.getCurrentPiece() == null && (kingPossibleMoves.contains(p) && kingInCheck(pieceColor, p)))
+                    -> (p.getCurrentPiece() == null && (kingPossibleMoves.contains(p) && kingInCheck(pieceColor, p)))
                     || enemyPossibleMoves.contains(p)
-                    || (!kingPossibleMoves.contains(p) && !checkIfSpotIsPreventative(p, currentKingSpot, PieceColor.BLACK )));
+                    || (!kingPossibleMoves.contains(p) && !checkIfSpotIsPreventative(p, currentKingSpot, PieceColor.BLACK)));
         }
 
-        turnPath(true, myPossibleMoves);
+        //turnPath(true, myPossibleMoves);
 
         //turnPath(true, enemyPossibleMoves);
         System.out.println(pieceColor + " side possible moves: " + myPossibleMoves.size());
@@ -356,8 +349,6 @@ public class Board extends GameObject {
             spot.releaseSpot();
         }
 
-        
-
         return !b;
     }
 
@@ -366,8 +357,49 @@ public class Board extends GameObject {
         if (spot == null || spot.getCurrentPiece() == null) {
             return null;
         }
+        
+        PieceColor pieceColor = spot.getCurrentPiece().getPieceColor();
+        
+        PieceColor enemyColor = pieceColor == PieceColor.WHITE ? PieceColor.BLACK : PieceColor.WHITE;
+        Spot currentKingSpot;
+        King currentKing;
 
-        return this.getPiecePath(spot);
+        if (pieceColor == PieceColor.WHITE) {
+            currentKingSpot = whiteKingSpot;
+            currentKing = (King) this.whiteKingSpot.getCurrentPiece();
+        } else {
+            currentKingSpot = blackKingSpot;
+            currentKing = (King) this.blackKingSpot.getCurrentPiece();
+        }
+        
+        Set<Spot> possibleMoves = this.getPiecePath(spot);
+
+        currentKingSpot.releaseSpot();
+
+        Set<Spot> enemyPossibleMoves = getPossibleMovesByColor(enemyColor, false);
+
+        currentKingSpot.ocuppySpot(currentKing);
+
+        Set<Spot> kingPossibleMoves = this.getPiecePath(currentKingSpot);
+        
+        if (kingInCheck(pieceColor, currentKingSpot)) {
+
+            if(spot.getCurrentPiece() instanceof King) {
+                possibleMoves.removeIf(p ->
+                     p.getCurrentPiece() == null
+                            && (kingPossibleMoves.contains(p) && kingInCheck(pieceColor, p)));
+                    //|| enemyPossibleMoves.contains(p)
+            }else{
+            
+            possibleMoves.removeIf(p ->
+                     //p.getCurrentPiece() == null
+                            //&& (kingPossibleMoves.contains(p) && kingInCheck(pieceColor, p)))
+                    //|| enemyPossibleMoves.contains(p)
+                    !checkIfSpotIsPreventative(p, currentKingSpot, PieceColor.BLACK));
+            }
+        }
+        
+        return possibleMoves;
     }
 
     public void removePiece(Spot spot) {
