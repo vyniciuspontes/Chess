@@ -54,8 +54,9 @@ public class GameManager implements MouseListener, Dynamic {
             default:
                 throw new AssertionError();
         }
-        board.kingInCheck(currentColor);
-
+        
+        //board.kingInCheck(currentColor);
+        
         if (ia != null && currentColor == ia.getColor()) {
             this.ia.play();
         }

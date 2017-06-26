@@ -11,7 +11,7 @@ import com.uff.chess.gameobjects.GameManager;
 import com.uff.chess.gameobjects.Spot;
 import com.uff.chess.gameobjects.pieces.Piece;
 import com.vpontes.gameframework.math.Vector2;
-import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -20,7 +20,7 @@ import java.util.List;
 public class HumamPlayer extends Player {
 
     private Spot selectedSpot;
-    private List<Spot> possiblePaths;
+    private Set<Spot> possiblePaths;
 
     public HumamPlayer(GameManager manager, Piece.PieceColor color, Board board) {
         super(manager, color, board);
@@ -36,7 +36,7 @@ public class HumamPlayer extends Player {
                 if (currentSpot.getCurrentPiece().getPieceColor() != this.color) {
                     return;
                 }
-                possiblePaths = board.showPossiblePaths(currentSpot);
+                possiblePaths = board.getPossibleMoves(currentSpot);
                 if (possiblePaths.isEmpty()) {
                     return;
                 }
