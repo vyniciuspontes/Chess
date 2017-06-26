@@ -46,13 +46,21 @@ public class GameManager implements MouseListener, Dynamic {
         switch (currentColor) {
             case WHITE:
                 currentColor = PieceColor.BLACK;
-                board.getWinCondition(currentColor);
                 break;
             case BLACK:
                 currentColor = PieceColor.WHITE;
                 break;
             default:
                 throw new AssertionError();
+        }
+        
+        if(board.getWinCondition(currentColor)){
+            if(currentColor == PieceColor.WHITE)
+                System.out.println("BLACK WINS");
+            else
+                System.out.println("WHITE WINS");
+            
+            return;
         }
         
         //board.kingInCheck(currentColor);

@@ -3,10 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/aline/Documents/GitHub/Chess/Code/Chess/src/com/uff/chess/gameobjects/Board.java</file>
-            <file>file:/C:/Users/aline/Documents/GitHub/Chess/Code/Chess/src/com/uff/chess/screens/GameScreen.java</file>
-            <file>file:/C:/Users/aline/Documents/GitHub/Chess/Code/Chess/src/com/uff/chess/gameobjects/players/HumamPlayer.java</file>
-            <file>file:/C:/Users/aline/Documents/GitHub/Chess/Code/Chess/src/com/uff/chess/gameobjects/Spot.java</file>
+            <file>file:/C:/Users/Vynicius/Coding/Git/Chess/Code/Chess/src/com/uff/chess/gameobjects/players/HumamPlayer.java</file>
+            <file>file:/C:/Users/Vynicius/Coding/Git/Chess/Code/Chess/src/com/uff/chess/gameobjects/Board.java</file>
+            <file>file:/C:/Users/Vynicius/Coding/Git/Chess/Code/Chess/src/com/uff/chess/main/ChessGame.java</file>
+            <file>file:/C:/Users/Vynicius/Coding/Git/Chess/Code/Chess/test/NewEmptyJUnitTest.java</file>
+            <file>file:/C:/Users/Vynicius/Coding/Git/Chess/Code/Chess/src/com/uff/chess/gameobjects/GameManager.java</file>
+            <file>file:/C:/Users/Vynicius/Coding/Git/Chess/Code/Chess/src/com/uff/chess/screens/GameScreen.java</file>
+            <file>file:/C:/Users/Vynicius/Coding/Git/Chess/Code/Chess/src/com/uff/chess/gameobjects/Spot.java</file>
+            <file>file:/C:/Users/Vynicius/Coding/Git/Chess/Code/Chess/src/com/uff/chess/screens/Menu.java</file>
         </group>
     </open-files>
 </project-private>
