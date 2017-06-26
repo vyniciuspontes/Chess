@@ -2,12 +2,10 @@ package com.uff.chess.gameobjects;
 
 import com.uff.chess.gameobjects.pieces.Bishop;
 import com.uff.chess.gameobjects.pieces.King;
-import com.uff.chess.gameobjects.pieces.Knight;
 import com.uff.chess.gameobjects.pieces.Pawn;
 import com.uff.chess.gameobjects.pieces.Piece;
 import com.uff.chess.gameobjects.pieces.Piece.PieceColor;
 import com.uff.chess.gameobjects.pieces.Queen;
-import com.uff.chess.gameobjects.pieces.Rook;
 import com.uff.chess.utils.ResourceManager;
 import com.vpontes.gameframework.math.OverlapTester;
 import com.vpontes.gameframework.math.Vector2;
@@ -38,40 +36,65 @@ public class Board extends GameObject {
 
     public Board(Vector2 position, int widght, int height, BufferedImage image) {
         super(position, widght, height, image);
-        setupSpots();
-        createPieces();
     }
 
     /**
      * Instancia as peças no Tabuleiro
      */
-    private void createPieces() {
+    public void createPieces() {
 
         pieces = new ArrayList<>();
 
         Piece whiteKingPiece = new King(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_KING);
+        this.spots[2][0].ocuppySpot(whiteKingPiece);
+        whiteKingSpot = this.spots[2][0];
+        pieces.add(whiteKingPiece);
+
+        Piece whiteQueenPiece = new Queen(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_QUEEN);
+        this.spots[3][0].ocuppySpot(whiteQueenPiece);
+        pieces.add(whiteQueenPiece);
+
+        Piece blackKingPiece = new King(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_KING);
+        this.spots[4][0].ocuppySpot(blackKingPiece);
+        this.blackKingSpot = this.spots[4][0];
+        pieces.add(blackKingPiece);
+
+        /*Piece blackQueenPiece = new Queen(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_QUEEN);
+        this.spots[3][0].ocuppySpot(blackQueenPiece);
+        pieces.add(blackQueenPiece);*/
+
+        Piece whiteLeftBishop = new Bishop(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_BISHOP);
+        this.spots[2][7].ocuppySpot(whiteLeftBishop);
+        pieces.add(whiteLeftBishop);
+
+        Piece whiteRightBishop = whiteLeftBishop.clone();
+        this.spots[5][7].ocuppySpot(whiteRightBishop);
+        pieces.add(whiteRightBishop);
+
+        /*Piece whiteKingPiece = new King(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_KING);
         this.spots[4][7].ocuppySpot(whiteKingPiece);
         whiteKingSpot = this.spots[4][7];
         pieces.add(whiteKingPiece);
 
-         Piece whiteQueenPiece = new Queen(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_QUEEN);
+        Piece whiteQueenPiece = new Queen(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_QUEEN);
         this.spots[3][7].ocuppySpot(whiteQueenPiece);
         pieces.add(whiteQueenPiece);
+        
 
         Piece whiteLeftKnight = new Knight(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_KNIGHT);
-        this.spots[2][7].ocuppySpot(whiteLeftKnight);
+        this.spots[1][7].ocuppySpot(whiteLeftKnight);
         pieces.add(whiteLeftKnight);
 
         Piece whiteRightKnight = whiteLeftKnight.clone();
-        this.spots[5][7].ocuppySpot(whiteRightKnight);
+        this.spots[6][7].ocuppySpot(whiteRightKnight);
         pieces.add(whiteRightKnight);
 
         Piece whiteLeftBishop = new Bishop(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_BISHOP);
-        this.spots[1][7].ocuppySpot(whiteLeftBishop);
+        this.spots[2][7].ocuppySpot(whiteLeftBishop);
         pieces.add(whiteLeftBishop);
 
         Piece whiteRightBishop = whiteLeftBishop.clone();
-        this.spots[6][7].ocuppySpot(whiteRightBishop);
+        this.spots[5][7].ocuppySpot(whiteRightBishop);
         pieces.add(whiteRightBishop);
 
         Piece whiteLeftRook = new Rook(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_ROOK);
@@ -104,19 +127,19 @@ public class Board extends GameObject {
         pieces.add(blackQueenPiece);
 
         Piece blackLeftKnight = new Knight(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_KNIGHT);
-        this.spots[2][0].ocuppySpot(blackLeftKnight);
+        this.spots[1][0].ocuppySpot(blackLeftKnight);
         pieces.add(blackLeftKnight);
 
         Piece blackRightKnight = blackLeftKnight.clone();
-        this.spots[5][0].ocuppySpot(blackRightKnight);
+        this.spots[6][0].ocuppySpot(blackRightKnight);
         pieces.add(blackRightKnight);
 
         Piece blackLeftBishop = new Bishop(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_BISHOP);
-        this.spots[1][0].ocuppySpot(blackLeftBishop);
+        this.spots[2][0].ocuppySpot(blackLeftBishop);
         pieces.add(blackLeftBishop);
 
         Piece blackRightBishop = blackLeftBishop.clone();
-        this.spots[6][0].ocuppySpot(blackRightBishop);
+        this.spots[5][0].ocuppySpot(blackRightBishop);
         pieces.add(blackRightBishop);
 
         Piece blackLeftRook = new Rook(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_ROOK);
@@ -125,13 +148,13 @@ public class Board extends GameObject {
 
         Piece blackRightRook = blackLeftRook.clone();
         this.spots[7][0].ocuppySpot(blackRightRook);
-        pieces.add(blackRightRook);
+        pieces.add(blackRightRook);*/
     }
 
     /**
      * Organiza os blocos em suas posicoes
      */
-    private void setupSpots() {
+    public void setupSpots() {
         Integer aux = 0;
         Vector2 startPosition = new Vector2(this.getWidght() / 2 - (60 * 8) / 2, this.getHeight() / 2 - (60 * 8) / 2);
         String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H"};
@@ -149,6 +172,13 @@ public class Board extends GameObject {
         }
     }
 
+    /**
+     * Move uma peça de um spot para outro
+     *
+     * @param toSpot
+     * @param fromSpot
+     * @param piece
+     */
     public void movePiece(Spot toSpot, Spot fromSpot, Piece piece) {
 
         toSpot.ocuppySpot(piece);
@@ -165,6 +195,12 @@ public class Board extends GameObject {
         }
     }
 
+    /**
+     * Retorna um spot a partir de uma posicao x e y
+     *
+     * @param p
+     * @return
+     */
     public Spot getSpotByPosition(Point p) {
         if (checkOutofBounds(p)) {
             return null;
@@ -173,6 +209,12 @@ public class Board extends GameObject {
         return spots[p.x][p.y];
     }
 
+    /**
+     * Retorna uma spot a partir de um Vector2
+     *
+     * @param clickPosition
+     * @return
+     */
     public Spot getSpotByMouseClick(Vector2 clickPosition) {
 
         for (Spot[] spotLine : spots) {
@@ -188,8 +230,9 @@ public class Board extends GameObject {
 
     /**
      * Retorna um set de spots com peças da cor recebida
+     *
      * @param pieceColor
-     * @return 
+     * @return
      */
     public Set<Spot> getSpotByPieceColor(PieceColor pieceColor) {
 
@@ -205,108 +248,191 @@ public class Board extends GameObject {
 
         return spotByColor;
     }
-    
-    public boolean kingInCheck(PieceColor pieceColor) {
+
+    /**
+     * Verifica se o rei esta em xeque em uma dada posicao
+     *
+     * @param pieceColor cor do rei
+     * @param kingSpot posicao a ser veririficada
+     * @return
+     */
+    public boolean kingInCheck(PieceColor pieceColor, Spot kingSpot) {
 
         Set<Spot> enemyPossibleMoves = new HashSet<>();
 
         Set<Spot> enemyOccupiedSpots = getSpotByPieceColor(pieceColor == PieceColor.WHITE ? PieceColor.BLACK : PieceColor.WHITE);
 
         enemyOccupiedSpots.forEach((enemyOccupiedSpot) -> {
-            enemyPossibleMoves.addAll(this.showPossiblePaths(enemyOccupiedSpot));
+            enemyPossibleMoves.addAll(this.getPiecePath(enemyOccupiedSpot));
         });
-        
-        //turnPath(true, enemyPossibleMoves);
 
         if (pieceColor == PieceColor.BLACK) {
-            if (enemyPossibleMoves.contains(this.blackKingSpot)) {
-                System.out.println("Black King in xeque".toUpperCase());
+
+            if (enemyPossibleMoves.contains(kingSpot)) {
                 return true;
             }
         } else if (pieceColor == PieceColor.WHITE) {
-            if (enemyPossibleMoves.contains(this.whiteKingSpot)) {
-                System.out.println("White King in xeque".toUpperCase());
+            if (enemyPossibleMoves.contains(kingSpot)) {
                 return true;
             }
         }
-        
-        //turnPath(false, enemyPossibleMoves);
 
         return false;
     }
-    
-    public boolean getWinCondition(PieceColor pieceColor){
-        
-        //this.turnPath(false, this.spots);
-        
-        //this.clearAllSelectedSpots();
-        
-        PieceColor enemyColor = pieceColor == PieceColor.WHITE ? PieceColor.BLACK : PieceColor.WHITE; 
-        
-        King blackKing = (King) this.blackKingSpot.getCurrentPiece();
-        
-        Set<Spot> myPossibleMoves = new HashSet<>();
-        Set<Spot> mySpots = getSpotByPieceColor(pieceColor);
-        
-        
-        System.out.println(mySpots);
-        
-        mySpots.forEach((mySpot) -> {
-            myPossibleMoves.addAll(this.showPossiblePaths(mySpot));
-        });
-        
-        
-        this.blackKingSpot.releaseSpot();
-        
-        Set<Spot> enemyPossibleMoves = new HashSet<>();
-        Set<Spot> enemyOccupiedSpots = getSpotByPieceColor(enemyColor);
 
-        enemyOccupiedSpots.forEach((enemyOccupiedSpot) -> {
-            enemyPossibleMoves.addAll(this.showPossiblePaths(enemyOccupiedSpot, true));
+    /**
+     * Retorna um set de spots os quais todas as peças de uma determinada cor
+     * pode mover
+     *
+     * @param pieceColor
+     * @param considerMyColorPieces
+     * @return
+     */
+    public Set<Spot> getPossibleMovesByColor(PieceColor pieceColor, boolean considerMyColorPieces) {
+
+        Set<Spot> possibleSpotMoves = new HashSet<>();
+
+        Set<Spot> colorOccupiedSpots = getSpotByPieceColor(pieceColor);
+        colorOccupiedSpots.forEach((occupiedSpot) -> {
+            possibleSpotMoves.addAll(this.getPiecePath(occupiedSpot, considerMyColorPieces));
         });
-        
-        
-        myPossibleMoves.removeAll(enemyPossibleMoves);
-        
-        
-        //turnPath(true, myPossibleMoves);
-        
+
+        return possibleSpotMoves;
+    }
+
+    /**
+     * Verifica se o jogo acabou
+     *
+     * @param pieceColor cor do lado a ser verificado
+     * @return caso os possiveis movimentos de um lado forem igual a 0 o jogo
+     * acabou
+     */
+    public boolean getWinCondition(PieceColor pieceColor) {
+
+        Set<Spot> possibleMoves = new HashSet<>();
+        Set<Spot> currentColorPiecesSpots = getSpotByPieceColor(pieceColor);
+
+        currentColorPiecesSpots.forEach((spot) -> {
+            possibleMoves.addAll(this.getPossibleMoves(spot));
+        });
+
+        System.out.println(pieceColor + " side possible moves: " + possibleMoves.size());
+
+        return possibleMoves.size() <= 0;
+    }
+
+    /**
+     * Verifica se o spot sendo ocupado por uma peça aliada este pode previnir um xeque
+     * @param spot
+     * @param kingPosition
+     * @param color
+     * @return 
+     */
+    private boolean checkIfSpotIsPreventative(Spot spot, Spot kingPosition, PieceColor color) {
+
+        boolean b = false;
+
+        if (spot.getCurrentPiece() == null) {
+            spot.ocuppySpot(new Pawn(new Vector2(), 0, 0, color, null));
+            b = this.kingInCheck(color, kingPosition);
+            spot.releaseSpot();
+        }
+
+        return !b;
+    }
+
+    /**
+     * Faz uma busca logica dos possiveis movimentos dado um spot com peça e os retorna num set
+     * @param spot
+     * @return 
+     */
+    public Set<Spot> getPossibleMoves(Spot spot) {
+
+        if (spot == null || spot.getCurrentPiece() == null) {
+            return new HashSet<>();
+        }
+
+        PieceColor pieceColor = spot.getCurrentPiece().getPieceColor();
+
+        PieceColor enemyColor = pieceColor == PieceColor.WHITE ? PieceColor.BLACK : PieceColor.WHITE;
+        Spot currentKingSpot;
+        King currentKing;
+
+        if (pieceColor == PieceColor.WHITE) {
+            currentKingSpot = whiteKingSpot;
+            currentKing = (King) this.whiteKingSpot.getCurrentPiece();
+        } else {
+            currentKingSpot = blackKingSpot;
+            currentKing = (King) this.blackKingSpot.getCurrentPiece();
+        }
+
+        Set<Spot> possibleMoves = this.getPiecePath(spot);
+
+        currentKingSpot.releaseSpot();
+
+        Set<Spot> enemyPossibleMoves = getPossibleMovesByColor(enemyColor, false);
+
+        currentKingSpot.ocuppySpot(currentKing);
+
         //turnPath(true, enemyPossibleMoves);
         
-        System.out.println("My " + pieceColor + " Possible Moves: " + myPossibleMoves.size());
-        
-        this.blackKingSpot.ocuppySpot(blackKing);
-        
-        return false;
+        Set<Spot> kingPossibleMoves = this.getPiecePath(currentKingSpot);
+
+        if (spot.getCurrentPiece() instanceof King) {
+            possibleMoves.removeIf(p
+                    -> (p.getCurrentPiece() == null
+                    && (kingPossibleMoves.contains(p) && kingInCheck(pieceColor, p)))
+                    || enemyPossibleMoves.contains(p));
+
+        } else if (kingInCheck(pieceColor, currentKingSpot)) {
+
+            possibleMoves.removeIf(p
+                    -> !checkIfSpotIsPreventative(p, currentKingSpot, pieceColor));
+
+        }
+
+        return possibleMoves;
     }
 
+    /**
+     * Remove uma peça de jogo
+     * @param spot 
+     */
     public void removePiece(Spot spot) {
         spot.getCurrentPiece().setRemoved(true);
         spot.releaseSpot();
     }
 
-    private void addContinuosPath(Point startCoordinate, Point move, Piece piece, List<Spot> spotList, boolean considerMyColorPieces) {
+    /**
+     * Calcula os movimentos de peças continuas
+     * @param startCoordinate
+     * @param move
+     * @param piece
+     * @param spotList
+     * @param considerBoardPieces 
+     */
+    private void addContinuosPath(Point startCoordinate, Point move, Piece piece, Set<Spot> spotList, boolean considerBoardPieces) {
         startCoordinate.setLocation(startCoordinate.x + move.x, startCoordinate.y + move.y);
         Spot s = getSpotByPosition(startCoordinate);
         if (!checkOutofBounds(startCoordinate)) {
-            if (!s.isOcuppied()) {
+            if (!s.isOcuppied() || !considerBoardPieces) {
                 spotList.add(s);
-                addContinuosPath(startCoordinate, move, piece, spotList, considerMyColorPieces);
-            } else if (s.getCurrentPiece().getPieceColor() != piece.getPieceColor() || considerMyColorPieces) {
+                addContinuosPath(startCoordinate, move, piece, spotList, considerBoardPieces);
+            } else if (s.getCurrentPiece().getPieceColor() != piece.getPieceColor() || !considerBoardPieces) {
                 spotList.add(s);
             }
         }
 
     }
 
-    public List<Spot> showPossiblePaths(Spot spot) {
-       return showPossiblePaths(spot, false);
-    }     
-    
-    public List<Spot> showPossiblePaths(Spot spot, boolean considerMyColorPieces) {
+    private Set<Spot> getPiecePath(Spot spot) {
+        return Board.this.getPiecePath(spot, false);
+    }
 
-        List<Spot> selectedSpots = new ArrayList<>();
-        
+    private Set<Spot> getPiecePath(Spot spot, boolean considerBoardPieces) {
+
+        Set<Spot> selectedSpots = new HashSet<>();
+
         int direction = spot.getCurrentPiece().getPieceColor() == PieceColor.WHITE ? -1 : 1;
 
         Point moveCoordinate = new Point();
@@ -315,7 +441,7 @@ public class Board extends GameObject {
                 moveCoordinate.x = move[0];
                 moveCoordinate.y = move[1] * direction;
                 addContinuosPath(new Point(spot.getBoardCoordinate()),
-                        moveCoordinate, spot.getCurrentPiece(), selectedSpots, considerMyColorPieces);
+                        moveCoordinate, spot.getCurrentPiece(), selectedSpots, considerBoardPieces);
             }
         } else {
             for (int[] move : spot.getCurrentPiece().getMovements()) {
@@ -335,32 +461,33 @@ public class Board extends GameObject {
                             }
                         }
 
-                        if ((isAttackMovement && movementSpot.isOcuppied() && ( spot.getCurrentPiece().getPieceColor() != movementSpot.getCurrentPiece().getPieceColor() 
-                                || considerMyColorPieces ) )
+                        if ((isAttackMovement && movementSpot.isOcuppied() && (spot.getCurrentPiece().getPieceColor() != movementSpot.getCurrentPiece().getPieceColor()
+                                || considerBoardPieces))
                                 || (!isAttackMovement && !movementSpot.isOcuppied())) {
                             selectedSpots.add(movementSpot);
                         }
-                    } else if (!movementSpot.isOcuppied() || ( spot.getCurrentPiece().getPieceColor() != movementSpot.getCurrentPiece().getPieceColor() || considerMyColorPieces )) {
+                    } else if (!movementSpot.isOcuppied() || spot.getCurrentPiece().getPieceColor() != movementSpot.getCurrentPiece().getPieceColor() || !considerBoardPieces) {
 
                         selectedSpots.add(movementSpot);
                     }
                 }
             }
+
         }
 
         return selectedSpots;
     }
-    
-    public void clearAllSelectedSpots(){
+
+    public void clearAllSelectedSpots() {
         this.turnPath(false, spots);
     }
-    
+
     public void turnPath(boolean on, Collection<Spot> spotList) {
         spotList.forEach((selectedSpot) -> {
             selectedSpot.setSelected(on);
         });
     }
-    
+
     public void turnPath(boolean on, Spot[][] spotArray) {
         for (Spot[] spots1 : spotArray) {
             for (Spot spot : spots1) {
@@ -385,7 +512,7 @@ public class Board extends GameObject {
                 spotX.draw(g);
             }
         }
-        
+
         pieces.forEach((piece) -> {
             if (!piece.isRemoved()) {
                 piece.draw(g);
