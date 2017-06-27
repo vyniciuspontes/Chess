@@ -5,7 +5,7 @@
  */
 package com.uff.chess.screens;
 
-import com.uff.chess.gameobjects.Board;
+import com.uff.chess.gameobjects.board.Board;
 import com.uff.chess.gameobjects.GameManager;
 import com.uff.chess.gameobjects.players.HumamPlayer;
 import com.uff.chess.gameobjects.players.IA;
@@ -27,13 +27,13 @@ public class GameScreen extends Screen {
     private final Board board;
     private final GameManager pm; 
 
-    public GameScreen(Game game) {
+    public GameScreen(Game game, boolean onlyHumans) {
         super(game);
         this.board = new Board(new Vector2(0, 0), 800, 600, ResourceManager.BACKGROUND);
         this.board.setupSpots();
         this.board.createPieces();
         
-        this.pm = new GameManager(board, Piece.PieceColor.WHITE, Piece.PieceColor.BLACK, true);
+        this.pm = new GameManager(board, Piece.PieceColor.WHITE, Piece.PieceColor.BLACK, onlyHumans);
         game.addMouseListener(pm);
     }
 

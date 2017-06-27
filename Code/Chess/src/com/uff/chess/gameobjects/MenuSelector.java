@@ -139,11 +139,12 @@ public class MenuSelector extends GameObject implements KeyListener
                     currentScene = CurrentScene.ModeSelection;
                     UpdatePosition();
                 }
-                //Selecionou Jogar 1 Jogador
+                //Selecionou para jogar contra a IA
                 else if (currentScene == CurrentScene.ModeSelection)
                 {
-                    currentScene = CurrentScene.Game;
-                    game.setScreen(new GameScreen(game));
+                      currentScene = CurrentScene.DifficultySelection;
+                    position = 0;
+                    UpdatePosition();
                 }
                 //Apertou para sair dos creditos
                 else if (currentScene == CurrentScene.Creditos)
@@ -155,7 +156,7 @@ public class MenuSelector extends GameObject implements KeyListener
                 {
                     //Inicia IA no FACIL
                     currentScene = CurrentScene.Game;
-                    game.setScreen(new GameScreen(game));
+                    game.setScreen(new GameScreen(game, false));
                 }
                 break;
                 
@@ -165,12 +166,11 @@ public class MenuSelector extends GameObject implements KeyListener
                 {
                     currentScene = CurrentScene.Creditos;
                 }
-                //Selecionou para jogar contra a IA
+                //Selecionou Jogar 2 Jogadores
                 else if (currentScene == CurrentScene.ModeSelection)
-                {
-                    currentScene = CurrentScene.DifficultySelection;
-                    position = 0;
-                    UpdatePosition();
+                {   
+                    currentScene = CurrentScene.Game;
+                    game.setScreen(new GameScreen(game, true));
                 }
                 //Apertou para sair dos creditos
                 else if(currentScene == CurrentScene.Creditos)
@@ -184,7 +184,7 @@ public class MenuSelector extends GameObject implements KeyListener
                 {
                     //Inicia IA no MEDIO
                     currentScene = CurrentScene.Game;
-                    game.setScreen(new GameScreen(game));
+                    game.setScreen(new GameScreen(game, false));
                 }
                 break;
                 
@@ -194,7 +194,7 @@ public class MenuSelector extends GameObject implements KeyListener
                 {
                     //Inicia IA no DIFICIL
                     currentScene = CurrentScene.Game;
-                    game.setScreen(new GameScreen(game));
+                    game.setScreen(new GameScreen(game, false));
                 }
                 //Selecionou para sair
                 else

@@ -6,10 +6,14 @@
  */
 package com.uff.chess.gameobjects.players;
 
-import com.uff.chess.gameobjects.Board;
+import com.uff.chess.gameobjects.board.Board;
 import com.uff.chess.gameobjects.Dynamic;
 import com.uff.chess.gameobjects.GameManager;
+import com.uff.chess.gameobjects.board.Spot;
 import com.uff.chess.gameobjects.pieces.Piece.PieceColor;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -25,6 +29,17 @@ public class IA extends Player implements Dynamic {
 
     public void play() {
         this.moved = true;
+        
+        List<Spot> pieceSpots = new ArrayList(board.getSpotsWithPossibleMoves(this.color));
+        
+        Spot fromSpot = pieceSpots.get(new Random().nextInt(pieceSpots.size()));
+        
+        List<Spot> moves = new ArrayList(board.getPossibleMoves(fromSpot));
+        
+        Spot toSpot = moves.get(new Random().nextInt(moves.size()));
+        
+        board.movePiece(toSpot, fromSpot, fromSpot.getCurrentPiece());
+        
         System.out.println("IA is played");
         this.manager.changeTurn();
     }

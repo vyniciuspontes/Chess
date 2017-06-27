@@ -6,9 +6,9 @@
  */
 package com.uff.chess.gameobjects.players;
 
-import com.uff.chess.gameobjects.Board;
+import com.uff.chess.gameobjects.board.Board;
 import com.uff.chess.gameobjects.GameManager;
-import com.uff.chess.gameobjects.Spot;
+import com.uff.chess.gameobjects.board.Spot;
 import com.uff.chess.gameobjects.pieces.Piece;
 import com.vpontes.gameframework.math.Vector2;
 import java.util.Set;
@@ -52,9 +52,7 @@ public class HumamPlayer extends Player {
 
                     //if (possiblePaths.contains(currentSpot)) {
                     //player fez sua jogada
-                    if (currentSpot.isOcuppied()) {
-                        board.removePiece(currentSpot);
-                    }
+                   
                     System.out.println("MOVED " + selectedSpot.getCurrentPiece().toString().toUpperCase() + " FROM "
                             + currentSpot.toString() + " TO " + selectedSpot.toString());
                     board.movePiece(currentSpot, selectedSpot, selectedSpot.getCurrentPiece());
