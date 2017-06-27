@@ -40,14 +40,14 @@ public class Board extends GameObject {
 
     public Board(Vector2 position, int widght, int height, BufferedImage image) {
         super(position, widght, height, image);
+        
+        this.pieces = new ArrayList<>();
     }
-
+    
     /**
      * Instancia as peças no Tabuleiro
      */
-    public void createPieces() {
-
-        pieces = new ArrayList<>();
+    public void createDefaultPieces() {
 
         /*Piece whiteKingPiece = new King(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_KING);
         this.spots[4][7].ocuppySpot(whiteKingPiece);
@@ -367,7 +367,7 @@ public class Board extends GameObject {
             return new HashSet<>();
         }
 
-        clearAllSelectedSpots();
+        //clearAllSelectedSpots();
         
         PieceColor pieceColor = spot.getCurrentPiece().getPieceColor();
 
@@ -397,8 +397,10 @@ public class Board extends GameObject {
 
         if (spot.getCurrentPiece() instanceof King) {
             possibleMoves.removeIf(p
-                    -> (p.getCurrentPiece() == null
-                    && (kingPossibleMoves.contains(p) && kingInCheck(pieceColor, p)))
+                    -> 
+                    (
+                        p.getCurrentPiece() == null && (kingPossibleMoves.contains(p) && kingInCheck(pieceColor, p))
+                    )
                     || enemyPossibleMoves.contains(p));
 
         } else if (kingInCheck(pieceColor, currentKingSpot)) {
@@ -411,6 +413,18 @@ public class Board extends GameObject {
         return possibleMoves;
     }
 
+    public void addPieceToSpot(Point spotPosition, Piece piece){
+        
+        if(piece != null && piece instanceof King){
+            if(piece.getPieceColor() == PieceColor.WHITE)
+                this.whiteKingSpot = this.spots[spotPosition.x][spotPosition.y];
+            else
+                this.blackKingSpot = this.spots[spotPosition.x][spotPosition.y];
+        }
+        
+        this.spots[spotPosition.x][spotPosition.y].ocuppySpot(piece);
+    }
+    
     /**
      * Remove uma peça de jogo
      * @param spot 
@@ -489,7 +503,6 @@ public class Board extends GameObject {
                     }
                 }
             }
-
         }
 
         return selectedSpots;

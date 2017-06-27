@@ -31,7 +31,7 @@ public class GameScreen extends Screen {
         super(game);
         this.board = new Board(new Vector2(0, 0), 800, 600, ResourceManager.BACKGROUND);
         this.board.setupSpots();
-        this.board.createPieces();
+        this.board.createDefaultPieces();
         
         this.pm = new GameManager(board, Piece.PieceColor.WHITE, Piece.PieceColor.BLACK, onlyHumans);
         game.addMouseListener(pm);
