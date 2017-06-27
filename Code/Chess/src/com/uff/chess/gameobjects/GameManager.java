@@ -6,6 +6,7 @@
  */
 package com.uff.chess.gameobjects;
 
+import com.uff.chess.gameobjects.board.Board;
 import com.uff.chess.gameobjects.players.HumamPlayer;
 import com.uff.chess.gameobjects.players.IA;
 import com.uff.chess.gameobjects.pieces.Piece.PieceColor;

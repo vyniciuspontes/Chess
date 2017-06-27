@@ -1,5 +1,7 @@
-package com.uff.chess.gameobjects;
+package com.uff.chess.gameobjects.board;
 
+import com.uff.chess.gameobjects.Dynamic;
+import com.uff.chess.gameobjects.GameObject;
 import com.uff.chess.gameobjects.pieces.Pawn;
 import com.uff.chess.gameobjects.pieces.Piece;
 import com.uff.chess.utils.ResourceManager;
