@@ -7,11 +7,7 @@ package com.uff.chess.screens;
 
 import com.uff.chess.gameobjects.board.Board;
 import com.uff.chess.gameobjects.GameManager;
-import com.uff.chess.gameobjects.players.HumamPlayer;
-import com.uff.chess.gameobjects.players.IA;
-import com.uff.chess.gameobjects.players.Player;
 import com.uff.chess.gameobjects.pieces.Piece;
-import com.uff.chess.gameobjects.pieces.Piece.PieceColor;
 import com.uff.chess.utils.ResourceManager;
 import com.vpontes.gameframework.core.Game;
 import com.vpontes.gameframework.core.Screen;
