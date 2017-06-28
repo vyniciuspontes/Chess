@@ -152,6 +152,11 @@ public class BoardTest extends BaseSpotTest{
         board.addPieceToSpot(new Point(4, 4), new Queen(new Vector2(), 0, 0, PieceColor.BLACK, null));
         predefinedResultSet = this.getSpotSet(new String[]{"F5"});
         assertEquals(predefinedResultSet, board.getPossibleMoves(whiteQueenSpot));
+        
+        /**
+         * Testa caso a peça esteja protegendo o rei de alguma ameaça ela nao pode se mover
+         */
+        //assertTrue(board.getPossibleMoves(whiteQueenSpot).isEmpty());
 
         /**
          * Teste do movimento da rainha branca caso o rei esteja em perido e seu

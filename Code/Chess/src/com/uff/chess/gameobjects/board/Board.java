@@ -9,7 +9,10 @@ import com.uff.chess.gameobjects.pieces.Piece;
 import com.uff.chess.gameobjects.pieces.Piece.PieceColor;
 import com.uff.chess.gameobjects.pieces.Queen;
 import com.uff.chess.gameobjects.pieces.Rook;
+import com.uff.chess.screens.PawnPromotion;
+import com.uff.chess.screens.PawnPromotion.PromotionPiece;
 import com.uff.chess.utils.ResourceManager;
+import com.vpontes.gameframework.core.Game;
 import com.vpontes.gameframework.math.OverlapTester;
 import com.vpontes.gameframework.math.Vector2;
 import java.awt.Graphics;
@@ -33,6 +36,7 @@ public class Board extends GameObject {
     private Spot whiteKingSpot;
     private Spot blackKingSpot;
     private List<Piece> pieces;
+    private Game game;
     private final BufferedImage[] blocksImages = {
         ResourceManager.WHITE_SPOT,
         ResourceManager.BLACK_SPOT
@@ -50,6 +54,13 @@ public class Board extends GameObject {
         super(position, widght, height, image);
         
         this.pieces = new ArrayList<>();
+    }
+    
+    public Board(Vector2 position, int widght, int height, BufferedImage image, Game game) {
+        super(position, widght, height, image);
+        
+        this.pieces = new ArrayList<>();
+        this.game = game;
     }
     
     /**
@@ -81,8 +92,16 @@ public class Board extends GameObject {
 
         Piece whiteRightBishop = whiteLeftBishop.clone();
         this.spots[5][7].ocuppySpot(whiteRightBishop);
-        pieces.add(whiteRightBishop);*/
+        pieces.add(whiteRightBishop);
 
+        Piece whiteCurrentPawn = new Pawn(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_PAWN);
+        this.spots[1][2].ocuppySpot(whiteCurrentPawn);
+        pieces.add(whiteCurrentPawn);
+        
+        Piece blackCurrentPawn = new Pawn(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_PAWN);
+        this.spots[1][5].ocuppySpot(blackCurrentPawn);
+        pieces.add(blackCurrentPawn);*/
+        
         Piece whiteKingPiece = new King(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_KING);
         this.spots[4][7].ocuppySpot(whiteKingPiece);
         whiteKingSpot = this.spots[4][7];
@@ -183,6 +202,77 @@ public class Board extends GameObject {
             }
         }
     }
+    
+    private boolean isLastSpot(Spot spot, PieceColor color){
+        if(color == PieceColor.WHITE){
+            for (Spot[] spot1 : spots) {
+                
+                if (spot.equals(spot1[0])) {
+                    return true;
+                }
+            }
+        }else{
+            for (Spot[] spot1 : spots) {
+                
+                if (spot.equals(spot1[7])) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    private void pawnPromotion(Spot spot){
+        PromotionPiece promotionPiece = null;
+        PawnPromotion dialog = null;
+        do{
+            dialog = new PawnPromotion(this.game.getFrame());
+            dialog.setVisible(true);
+            promotionPiece = dialog.getPromotionPiece();
+        }while(promotionPiece == null);
+        
+        
+        PieceColor color = spot.getCurrentPiece().getPieceColor();
+        this.removePiece(spot);
+        Piece newPiece = null;
+        switch(dialog.getPromotionPiece()){
+            case QUEEN:
+                if(color == PieceColor.WHITE){
+                    newPiece = new Queen(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_QUEEN);
+                }else {
+                    newPiece = new Queen(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_QUEEN);
+                }
+                spot.ocuppySpot(newPiece);
+                pieces.add(newPiece);
+                break;
+            case BISHOP:
+                if(color == PieceColor.WHITE){
+                    newPiece = new Bishop(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_BISHOP);
+                }else {
+                    newPiece = new Bishop(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_BISHOP);
+                }
+                break;
+            case KNIGHT:
+                if(color == PieceColor.WHITE){
+                    newPiece = new Knight(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_KNIGHT);
+                }else {
+                    newPiece = new Knight(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_KNIGHT);
+                }
+                break;
+            case ROOK:
+                if(color == PieceColor.WHITE){
+                    newPiece = new Rook(new Vector2(), 50, 50, PieceColor.WHITE, ResourceManager.WHITE_ROOK);
+                }else {
+                    newPiece = new Rook(new Vector2(), 50, 50, PieceColor.BLACK, ResourceManager.BLACK_ROOK);
+                }
+                break;
+        }
+        
+        
+        spot.ocuppySpot(newPiece);
+        pieces.add(newPiece);
+    }
 
     /**
      * Move uma peça de um spot para outro
@@ -202,18 +292,23 @@ public class Board extends GameObject {
         toSpot.ocuppySpot(piece);
         fromSpot.releaseSpot();
 
-        if (toSpot.getCurrentPiece() instanceof Pawn && ((Pawn) toSpot.getCurrentPiece()).isFirstMovement()) {
-            ((Pawn) toSpot.getCurrentPiece()).setFirstMovement();
+        if (toSpot.getCurrentPiece() instanceof Pawn ) {
+            Pawn pawn = (Pawn) toSpot.getCurrentPiece();
+            if(pawn.isFirstMovement()){
+                pawn.setFirstMovement();
+            }else if(isLastSpot(toSpot, pawn.getPieceColor())){
+                pawnPromotion(toSpot);
+            }
         } else if (toSpot.getCurrentPiece() instanceof King) {
             if (toSpot.getCurrentPiece().getPieceColor() == PieceColor.BLACK) 
             {
                 this.blackKingSpot = toSpot;
                 //Executa o roque caso o rei tenha andado 2 a esquerda ou direita
-                if(toSpot == spots[2][0])
+                if(toSpot == spots[2][0] && canRoque(toSpot) != RoqueStatus.NoRoque)
                 {
                     movePiece(spots[3][0],spots[0][0], spots[0][0].getCurrentPiece());
                 }
-                else if(toSpot == spots[6][0])
+                else if(toSpot == spots[6][0] && canRoque(toSpot) != RoqueStatus.NoRoque)
                 {
                     movePiece(spots[5][0],spots[7][0], spots[7][0].getCurrentPiece());
                 }
@@ -223,11 +318,11 @@ public class Board extends GameObject {
                 this.whiteKingSpot = toSpot;
                 
                 //Executa o roque caso o rei tenha andado 2 a esquerda ou direita
-                if(toSpot == spots[2][7])
+                if(toSpot == spots[2][7] && canRoque(toSpot) != RoqueStatus.NoRoque)
                 {
                     movePiece(spots[3][7],spots[0][7], spots[0][7].getCurrentPiece());
                 }
-                else if(toSpot == spots[6][7])
+                else if(toSpot == spots[6][7] && canRoque(toSpot) != RoqueStatus.NoRoque)
                 {
                     movePiece(spots[5][7],spots[7][7], spots[7][7].getCurrentPiece());
                 }
@@ -360,7 +455,7 @@ public class Board extends GameObject {
 
         return possibleMoves.size() <= 0;
     }
-
+    
     /**
      * Verifica se o spot sendo ocupado por uma peça aliada este pode previnir um xeque
      * @param spot
@@ -399,6 +494,8 @@ public class Board extends GameObject {
 
         //clearAllSelectedSpots();
         
+        
+        
         PieceColor pieceColor = spot.getCurrentPiece().getPieceColor();
 
         PieceColor enemyColor = pieceColor == PieceColor.WHITE ? PieceColor.BLACK : PieceColor.WHITE;
@@ -412,6 +509,11 @@ public class Board extends GameObject {
             currentKingSpot = blackKingSpot;
             currentKing = (King) this.blackKingSpot.getCurrentPiece();
         }
+        
+        /*if(!checkIfSpotIsPreventative(spot, currentKingSpot, PieceColor.WHITE)){
+            
+            return new HashSet<>();
+        }*/
 
         Set<Spot> possibleMoves = this.getPiecePath(spot);
 
@@ -491,7 +593,7 @@ public class Board extends GameObject {
     }
     
     
-     public RoqueStatus canRoque(Spot spot)
+    public RoqueStatus canRoque(Spot spot)
     {
         RoqueStatus roqueStatus = RoqueStatus.NoRoque;
         //Retorna falso caso a peça tenha sido movida anteriormente
@@ -512,14 +614,16 @@ public class Board extends GameObject {
             roqueStatus = RoqueStatus.RoqueLeft;
             
             //Se a casa da torre a esquerda não está ocupada, se a peça já se movou, ou se não é uma torre ele retorna falso
-            if (!spots[0][0].isOcuppied() || spots[0][0].getCurrentPiece().getMoved() || (spots[0][0].getCurrentPiece() instanceof Rook) == false) 
+            if (spots[0][0].isOcuppied() && spots[0][0].getCurrentPiece() != null && 
+                    spots[0][0].getCurrentPiece().getMoved() && spots[0][0].getCurrentPiece() instanceof Rook == false)
             {
                 roqueStatus = RoqueStatus.NoRoque;
             }
 
             //retorna falso se algum espaço entre o rei e a torre estiver ocupado
             
-            if (spots[1][0].isOcuppied() || spots[2][0].isOcuppied() || spots[3][0].isOcuppied())
+            if (spots[1][0].isOcuppied() || (spots[2][0].isOcuppied() && (spots[2][0].getCurrentPiece() instanceof King && 
+                    spots[2][0].getCurrentPiece().getMoved())) || spots[3][0].isOcuppied())
             {
                 roqueStatus = RoqueStatus.NoRoque;
             }            
@@ -538,7 +642,10 @@ public class Board extends GameObject {
             }
             
             //retorna falso se algum espaço entre o rei e a torre estiver ocupado
-            if (!spots[6][0].isOcuppied() && !spots[5][0].isOcuppied())
+            if ((!spots[6][0].isOcuppied() || (spots[6][0].getCurrentPiece() instanceof King && 
+                    !spots[6][0].getCurrentPiece().getMoved())) && (!spots[5][0].isOcuppied() || (spots[5][0].getCurrentPiece() instanceof King && 
+                    !spots[5][0].getCurrentPiece().getMoved()))
+                && spots[7][0].isOcuppied() && !spots[7][0].getCurrentPiece().getMoved() && (spots[7][0].getCurrentPiece() instanceof Rook))
             {
                 if(roqueStatus == RoqueStatus.NoRoque)
                 {
@@ -562,20 +669,20 @@ public class Board extends GameObject {
             roqueStatus = RoqueStatus.RoqueLeft;
             
             //Se a casa da torre a esquerda não está ocupada, se a peça já se movou, ou se não é uma torre ele retorna falso
-            if (!spots[0][7].isOcuppied() || spots[0][7].getCurrentPiece().getMoved() || (spots[0][7].getCurrentPiece() instanceof Rook) == false) 
+            if (!spots[0][7].isOcuppied() || spots[0][7].getCurrentPiece().getMoved() || spots[0][7].getCurrentPiece() instanceof Rook == false) 
             {
                 roqueStatus = RoqueStatus.NoRoque;
             }
 
             //retorna falso se algum espaço entre o rei e a torre estiver ocupado
-            
-            if (spots[1][7].isOcuppied() || spots[2][7].isOcuppied() || spots[3][7].isOcuppied())
+            if (spots[1][7].isOcuppied() || (spots[2][7].isOcuppied() && !(spots[2][7].getCurrentPiece() instanceof King && 
+                    !spots[2][7].getCurrentPiece().getMoved()) || spots[3][7].isOcuppied()))
             {
                 roqueStatus = RoqueStatus.NoRoque;
             }            
             
             //Se a casa da torre a direita não está ocupada, se a peça já se movou, ou se não é uma torre ele retorna falso
-            if (spots[7][7].isOcuppied() && !spots[7][7].getCurrentPiece().getMoved() && (spots[7][7].getCurrentPiece() instanceof Rook)) 
+            if (spots[7][7].isOcuppied() && !spots[7][7].getCurrentPiece().getMoved() && spots[7][7].getCurrentPiece() instanceof Rook) 
             {
                 if(roqueStatus == RoqueStatus.RoqueLeft)
                 {
@@ -588,7 +695,8 @@ public class Board extends GameObject {
             }
             
             //retorna falso se algum espaço entre o rei e a torre estiver ocupado
-            if (!spots[6][7].isOcuppied() && !spots[5][7].isOcuppied())
+            if ((!spots[6][7].isOcuppied() || !spots[5][7].isOcuppied()) && spots[7][7].isOcuppied() && 
+                    !spots[7][7].getCurrentPiece().getMoved() && spots[7][7].getCurrentPiece() instanceof Rook)
             {
                 if(roqueStatus == RoqueStatus.NoRoque)
                 {
@@ -623,7 +731,7 @@ public class Board extends GameObject {
         int direction = spot.getCurrentPiece().getPieceColor() == PieceColor.WHITE ? -1 : 1;
 
         
-        if(!isChekingMoves && spot.getCurrentPiece() instanceof King)
+        if(!isChekingMoves && spot.getCurrentPiece() instanceof King && spot.getCurrentPiece().getMoved() == false)
         {
             RoqueStatus roqueStatus = canRoque(spot);
             if(roqueStatus == RoqueStatus.RoqueLeft)
@@ -690,8 +798,8 @@ public class Board extends GameObject {
                             }
                         }
 
-                        if ((isAttackMovement && movementSpot.isOcuppied() && (spot.getCurrentPiece().getPieceColor() != movementSpot.getCurrentPiece().getPieceColor()
-                                || !considerBoardPieces))
+                        if ((isAttackMovement && movementSpot.isOcuppied() && spot.getCurrentPiece().getPieceColor() != movementSpot.getCurrentPiece().getPieceColor())
+                                || !considerBoardPieces
                                 || (!isAttackMovement && !movementSpot.isOcuppied())) {
                             selectedSpots.add(movementSpot);
                         }

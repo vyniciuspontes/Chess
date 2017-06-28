@@ -25,7 +25,7 @@ public class GameScreen extends Screen {
 
     public GameScreen(Game game, boolean onlyHumans) {
         super(game);
-        this.board = new Board(new Vector2(0, 0), 800, 600, ResourceManager.BACKGROUND);
+        this.board = new Board(new Vector2(0, 0), 800, 600, ResourceManager.BACKGROUND, this.game);
         this.board.setupSpots();
         this.board.createDefaultPieces();
         

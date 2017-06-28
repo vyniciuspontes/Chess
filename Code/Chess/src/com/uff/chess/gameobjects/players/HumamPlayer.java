@@ -70,7 +70,8 @@ public class HumamPlayer extends Player {
                     manager.changeTurn();
                 }
                 selectedSpot = null;
-                possiblePaths.clear();
+                if(possiblePaths != null)
+                    possiblePaths.clear();
             }
         }
     }
