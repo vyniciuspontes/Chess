@@ -30,6 +30,7 @@ public class Pawn extends Piece {
     }
 
     public void setFirstMovement() {
+        this.firstMovement = false;
         this.movements = new int[][]{ {0, 1}, {1, 1}, {-1, 1} };
     }
 

@@ -15,6 +15,7 @@ import com.uff.chess.gameobjects.players.HumamPlayer;
 import com.uff.chess.main.ChessGame;
 import com.uff.chess.test.base.BaseSpotTest;
 import com.uff.chess.utils.ResourceManager;
+import com.vpontes.gameframework.core.Game;
 import com.vpontes.gameframework.math.Vector2;
 import java.awt.Point;
 import java.util.Set;
@@ -46,11 +47,11 @@ public class HumamPlayerTest extends BaseSpotTest{
     @Test
     public void testHumamPlayerMove() {
         //System.out.println("humamPlayerMove");
-        
-        Board board = new Board(new Vector2(0, 0), 800, 600, ResourceManager.BACKGROUND);
+        Game game = new ChessGame(0, 0, "Teste");
+        Board board = new Board(new Vector2(0, 0), 800, 600, ResourceManager.BACKGROUND, game);
         board.setupSpots();
         board.createDefaultPieces();
-        GameManager manager = new GameManager(new ChessGame(0, 0, "Teste"), board, Piece.PieceColor.WHITE, Piece.PieceColor.BLACK, true);
+        GameManager manager = new GameManager(game, board, Piece.PieceColor.WHITE, Piece.PieceColor.BLACK, true);
         HumamPlayer instance = new HumamPlayer(manager, Piece.PieceColor.WHITE, board);
         
         //Selecionando um spot vazio
@@ -64,7 +65,7 @@ public class HumamPlayerTest extends BaseSpotTest{
         
         //Selecionando uma peça aliada mas que nao possui movimentos naquele momento
         instance.humamPlayerMove(board.getSpotByPosition(new Point(0,7)));
-        assertTrue(instance.getPossiblePaths().isEmpty());
+        assertTrue(instance.getPossiblePaths() == null || instance.getPossiblePaths().isEmpty());
         
         //Selecionando uma peça aliada que possui movimentos
         instance.humamPlayerMove(board.getSpotByPosition(new Point(1,6)));
