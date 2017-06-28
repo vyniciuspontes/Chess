@@ -10,6 +10,7 @@ import com.vpontes.gameframework.math.Vector2;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 /**
  *
@@ -42,13 +43,22 @@ public class Spot extends GameObject implements Dynamic {
     }
 
     public void setSelected(boolean selected) {
-        
-        if(selected)
+
+        if (selected) {
             this.currentImage = selectedImage;
-        else
+        } else {
             this.currentImage = this.image;
-        
+        }
+
         this.selected = selected;
+    }
+    
+    public Spot(String code){
+        super(new Vector2(), 0, 0);
+        this.boardCoordinate = new Point();
+        this.rect = new Rectangle(0, 0, 0, 0);
+        selected = false;
+        this.code = code;
     }
 
     public Spot(Vector2 position, int widght, int height, BufferedImage image, Point boardCoordinate, String code) {
@@ -82,17 +92,47 @@ public class Spot extends GameObject implements Dynamic {
         }
     }
 
+    public String getCode() {
+        return code;
+    }
+
     @Override
     public String toString() {
         return this.code;
     }
-    
+
     @Override
-    public void draw(Graphics g){
+    public void draw(Graphics g) {
         super.draw(g, currentImage);
     }
 
     @Override
     public void update(double deltaTime) {
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + Objects.hashCode(this.code);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Spot other = (Spot) obj;
+        if (!Objects.equals(this.code, other.code)) {
+            return false;
+        }
+        return true;
+    }
+
 }

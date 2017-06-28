@@ -14,6 +14,8 @@ import com.uff.chess.gameobjects.pieces.Queen;
 import com.uff.chess.gameobjects.pieces.Rook;
 import com.vpontes.gameframework.math.Vector2;
 import java.awt.Point;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -23,10 +25,21 @@ import static org.junit.Assert.*;
  * @author Vynicius
  */
 public class BoardTest {
-    
     public BoardTest() {
         
     }
+    
+    public Set<Spot> getSpotSet(String[] codes){
+        
+        Set<Spot> returnSet = new HashSet<>();
+        
+        for (String code : codes) {
+            returnSet.add(new Spot(code));
+        }
+        
+        return returnSet;
+    }
+    
     @Before
     public void setUp() {        
     }
@@ -71,33 +84,63 @@ public class BoardTest {
     
     @Test
     public void testPossibleKingMoves(){
+        
+        
+        Set<Spot> predefinedResultSet;
+        
         Board board = new Board(new Vector2(0, 0), 800, 600, null);
         board.setupSpots();
         
-        //Sem remover
+        //Sem remover white king
         Point whiteKingPosition = new Point(4,6);
         Spot whiteKingSpot = board.getSpotByPosition(whiteKingPosition);
         board.addPieceToSpot(whiteKingPosition, new King(new Vector2(), 0, 0, Piece.PieceColor.WHITE, null));
-        assertEquals(8, board.getPossibleMoves(whiteKingSpot).size());
+        predefinedResultSet = this.getSpotSet(new String[]{"F6", "H6", "F5", "H5", "G6", "G4", "F4", "H4"});
+        assertEquals(predefinedResultSet, board.getPossibleMoves(whiteKingSpot));
        
-        //Sem remover
+        //Removendo caminhos em xeque white king
+        Spot blackQueenSpot = board.getSpotByPosition(new Point(2, 6));
+        board.addPieceToSpot(new Point(2, 6), new Queen(new Vector2(), 0,0,Piece.PieceColor.BLACK, null));
+        predefinedResultSet = this.getSpotSet(new String[]{"F6", "H6", "F5", "H5"});
+        assertEquals(predefinedResultSet, board.getPossibleMoves(whiteKingSpot));
+        
+        //Removendo caminhos em xeque comendo a peça que ameaça o rei white king
+        board.movePiece(board.getSpotByPosition(new Point(3, 6)), blackQueenSpot, blackQueenSpot.getCurrentPiece());
+        predefinedResultSet = this.getSpotSet(new String[]{"F6", "H6", "G4"});
+        assertEquals(predefinedResultSet, board.getPossibleMoves(whiteKingSpot));
+                      
+        //Removendo caminhos em xeque evitando comer a peça que ameaça o rei visto que se fizer isso havera outra ameaça white king
+        board.addPieceToSpot(new Point(2, 6), new Rook(new Vector2(), 0,0,Piece.PieceColor.BLACK, null));
+        
+        predefinedResultSet = this.getSpotSet(new String[]{"F6", "H6"});
+        assertEquals(predefinedResultSet, board.getPossibleMoves(whiteKingSpot));
+        
+        //Sem remover black king
         Point blackKingPosition = new Point(4,1);
         Spot blackKingSpot = board.getSpotByPosition(blackKingPosition);
         board.addPieceToSpot(blackKingPosition, new King(new Vector2(), 0, 0, Piece.PieceColor.BLACK, null));
-        assertEquals(8, board.getPossibleMoves(blackKingSpot).size());
+        predefinedResultSet = this.getSpotSet(new String[]{"A6", "C6", "A5", "C5", "B6", "B4", "A4", "C4"});
+        assertEquals(predefinedResultSet, board.getPossibleMoves(blackKingSpot));
         
-        //Removendo caminhos em xeque
-        Spot blackQueenSpot = board.getSpotByPosition(new Point(2, 6));
-        board.addPieceToSpot(new Point(2, 6), new Queen(new Vector2(), 0,0,Piece.PieceColor.BLACK, null));
-        assertEquals(4, board.getPossibleMoves(whiteKingSpot).size());
+        //Removendo caminhos em xeque black king
+        Spot whiteQueenSpot = board.getSpotByPosition(new Point(2, 1));
+        board.addPieceToSpot(new Point(2, 1), new Queen(new Vector2(), 0,0,Piece.PieceColor.WHITE, null));
+        predefinedResultSet = this.getSpotSet(new String[]{"A6", "C6", "A5", "C5"});
+        assertEquals(predefinedResultSet, board.getPossibleMoves(blackKingSpot));
         
-        //Removendo caminhos em xeque comendo a peça que ameaça o rei
-        board.movePiece(board.getSpotByPosition(new Point(3, 6)), blackQueenSpot, blackQueenSpot.getCurrentPiece());
-        assertEquals(3, board.getPossibleMoves(whiteKingSpot).size());
+        //Removendo caminhos em xeque comendo a peça que ameaça o rei black king
+        board.movePiece(board.getSpotByPosition(new Point(3, 1)), whiteQueenSpot, whiteQueenSpot.getCurrentPiece());
+        predefinedResultSet = this.getSpotSet(new String[]{"A6", "C6", "B4"});
+        assertEquals(predefinedResultSet, board.getPossibleMoves(blackKingSpot));
         
-        //Removendo caminhos em xeque evitando comer a peça que ameaça o rei visto que se fizer isso havera outra ameaça
-        board.addPieceToSpot(new Point(2, 6), new Rook(new Vector2(), 0,0,Piece.PieceColor.BLACK, null));
-        assertEquals(2, board.getPossibleMoves(whiteKingSpot).size());
+        //Removendo caminhos em xeque evitando comer a peça que ameaça o rei visto que se fizer isso havera outra ameaça black king
+        board.addPieceToSpot(new Point(2, 1), new Rook(new Vector2(), 0,0,Piece.PieceColor.WHITE, null));
+        predefinedResultSet = this.getSpotSet(new String[]{"A6", "C6"});
+        assertEquals(predefinedResultSet, board.getPossibleMoves(blackKingSpot));
+        
+    }
+    
+    public void testPiecesPossibleMoves(){
         
     }
     

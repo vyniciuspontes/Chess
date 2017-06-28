@@ -10,9 +10,12 @@ import com.uff.chess.gameobjects.board.Board;
 import com.uff.chess.gameobjects.players.HumamPlayer;
 import com.uff.chess.gameobjects.players.IA;
 import com.uff.chess.gameobjects.pieces.Piece.PieceColor;
+import com.uff.chess.screens.Menu;
+import com.vpontes.gameframework.core.Game;
 import com.vpontes.gameframework.math.Vector2;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -25,14 +28,17 @@ public class GameManager implements MouseListener, Dynamic {
     private HumamPlayer player2;
     private IA ia;
     private PieceColor currentColor;
-
-    private GameManager(Board board) {
+    private Game game;
+    
+    
+    private GameManager(Board board, Game game) {
         this.board = board;
+        this.game = game;
         this.currentColor = PieceColor.WHITE;
     }
 
-    public GameManager(Board board, PieceColor player1Color, PieceColor player2Color, boolean onlyHumans) {
-        this(board);
+    public GameManager(Game game, Board board, PieceColor player1Color, PieceColor player2Color, boolean onlyHumans) {
+        this(board, game);
         if(onlyHumans){
             player1 = new HumamPlayer(this, player1Color, board);
             player2 = new HumamPlayer(this, player2Color, board);
@@ -56,15 +62,16 @@ public class GameManager implements MouseListener, Dynamic {
         }
         
         if(board.getWinCondition(currentColor)){
-            if(currentColor == PieceColor.WHITE)
-                System.out.println("BLACK WINS");
-            else
-                System.out.println("WHITE WINS");
+            if(currentColor == PieceColor.WHITE) {
+                JOptionPane.showMessageDialog(this.game.getFrame(), "O Lado Preto Venceu !", "O Jogo Acabou",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this.game.getFrame(), "O Lado Branco Venceu !", "O Jogo Acabou",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
             
-            return;
+            this.game.setScreen(new Menu(game));
         }
-        
-        //board.kingInCheck(currentColor);
         
         if (ia != null && currentColor == ia.getColor()) {
             this.ia.play();

@@ -33,7 +33,7 @@ public class GameScreen extends Screen {
         this.board.setupSpots();
         this.board.createDefaultPieces();
         
-        this.pm = new GameManager(board, Piece.PieceColor.WHITE, Piece.PieceColor.BLACK, onlyHumans);
+        this.pm = new GameManager(this.game, board, Piece.PieceColor.WHITE, Piece.PieceColor.BLACK, onlyHumans);
         game.addMouseListener(pm);
     }
 

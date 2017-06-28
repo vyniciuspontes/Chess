@@ -33,6 +33,7 @@ public class HumamPlayer extends Player {
         if (currentSpot != null) {
 
             if (selectedSpot == null && currentSpot.isOcuppied()) {
+                System.out.println(currentSpot.getCode());
                 if (currentSpot.getCurrentPiece().getPieceColor() != this.color) {
                     return;
                 }
