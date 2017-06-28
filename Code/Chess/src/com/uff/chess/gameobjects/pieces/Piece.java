@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 public abstract class Piece extends GameObject implements Cloneable {
 
     private boolean removed;
+    private boolean moved;
     private final PieceColor pieceColor;
 
     public Piece(Vector2 position, int widght, int height, PieceColor color, BufferedImage image) {
@@ -60,6 +61,16 @@ public abstract class Piece extends GameObject implements Cloneable {
 
     public enum PieceColor {
         WHITE, BLACK
+    }
+    
+    public boolean getMoved()
+    {
+        return this.moved;
+    }
+    
+    public void move()
+    {
+        this.moved = true;
     }
 
 }
